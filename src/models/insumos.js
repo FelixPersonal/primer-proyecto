@@ -20,7 +20,10 @@ const Insumo = sequelize.define('Insumo', {
         type: DataTypes.DECIMAL(10, 2),
         allowNull: false,
     },
-
+    estado: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: true,
+    },
 });
 
 module.exports = Insumo;
