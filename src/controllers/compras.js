@@ -1,7 +1,7 @@
 const Compras = require('../models/compras');
 const { response } = require('express');
-const Detallecompras = require('../models/detalleCompras');
-const Productos = require('../models/productos')
+const DetallecomprasP = require('../models/detalleCompras');
+const DetallecomprasIn = require('../models/detalleComprasIn');
 
 const getCompras = async (req, res = response) => {
   try {
@@ -28,39 +28,33 @@ const getCompra = async (req, res = response) => {
   }
 }
 
-const getComprasDetalles = async (req, res = response) => {
+const getDetalleComprasP = async (req, res = response) => {
+  const { idCompra } = req.params;
   try {
-    // Obtener todas las compras
-    const compras = await Compras.findAll();
-
-    // Verificar si hay compras
-    if (!compras || compras.length === 0) {
-      return res.status(404).json({ error: 'No se encontraron compras' });
-    }
-
-    // Crear un array para almacenar las compras con sus detalles
-    const comprasConDetalles = [];
-
-    // Para cada compra, buscar sus detalles
-    for (const compra of compras) {
-      const detallesCompra = await Detallecompras.findAll({
-        where: { id_compra: compra.id_compra },
-      });
-
-      // Agregar la compra y sus detalles al array
-      comprasConDetalles.push({
-        compra,
-        detallesCompra,
-      });
-    }
-
-    // Responder con el array de compras y detalles
-    res.json(comprasConDetalles);
+    const detalles = await DetallecomprasP.findAll({ 
+      where: { id_compra: idCompra },
+      include: [{ model: Compras, where: { id: idCompra } }] // Incluir datos de la compra asociada filtrando por el idCompra
+    });
+    res.json(detalles);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Error al obtener las compras y sus detalles' });
+    res.status(500).json({ error: 'Error al obtener los detalles de la compra de productos' });
   }
-};
+}
+
+const getDetalleComprasIn = async (req, res = response) => {
+  const { idCompra } = req.params;
+  try {
+    const detalles = await DetallecomprasIn.findAll({ 
+      where: { id_compra: idCompra },
+      include: [{ model: Compras, where: { id: idCompra } }] // Incluir datos de la compra asociada filtrando por el idCompra
+    });
+    res.json(detalles);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error al obtener los detalles de la compra de insumos' });
+  }
+}
 
 const putCompra = async (req, res = response) => {
   const { id } = req.params;
@@ -86,9 +80,7 @@ const cambiarEstadoCompra = async (req, res = response) => {
   const { estado } = req.body;
 
   try {
-    const compra = await Compras.findByPk(id, {
-      include: [Detallecompras], // Incluir detalles de compra
-    });
+    const compra = await Compras.findByPk(id);
 
     if (compra) {
       // Verificar si el estado actual es diferente de "Pagado"
@@ -96,23 +88,7 @@ const cambiarEstadoCompra = async (req, res = response) => {
         // Actualizar solo el campo 'estado'
         await compra.update({ estado: estado });
 
-        // Iterar a través de los detalles de compra y actualizar los productos
-        for (const detalle of compra.detallecompras) {
-          const producto = await Productos.findByPk(detalle.id_producto);
-
-          if (producto) {
-            // Actualizar stock, precioCosto, precios, o cualquier otra lógica que necesites
-            // Aquí se supone que tienes métodos o lógica en tu modelo de Producto
-            // para actualizar la información según tus necesidades.
-            await producto.update({
-              stock: producto.stock + detalle.cantidad,
-              precioCosto: detalle.precioUnitario, // Suponiendo que precioUnitario es el costo de compra
-              precioVenta: detalle.precioVenta,
-            });
-          }
-        }
-
-        res.json({ msg: 'El estado de la compra fue actualizado y productos actualizados exitosamente' });
+        res.json({ msg: 'El estado de la compra fue actualizado' });
       } else {
         res.status(400).json({ error: 'La compra ya está marcada como Pagada' });
       }
@@ -121,7 +97,7 @@ const cambiarEstadoCompra = async (req, res = response) => {
     }
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Error al actualizar el estado de la compra', detalle: error.message });
+    res.status(500).json({ error: 'Error al actualizar el estado de la compra', Estado: error.message });
   }
 };
 
@@ -159,7 +135,8 @@ const deleteCompra = async (req, res = response) => {
 module.exports = {
   getCompra,
   getCompras,
-  getComprasDetalles,
+  getDetalleComprasP,
+  getDetalleComprasIn,
   postCompra,
   putCompra,
   deleteCompra,
