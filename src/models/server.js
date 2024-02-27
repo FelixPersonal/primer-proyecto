@@ -16,8 +16,8 @@ class Server {
     this.path = '/api';
     this.middlewares();
     this.routes();
-    this.createServer();
-    this.sockets();
+    this.createServer(); 
+    this.sockets(); 
   }
 
   createServer() {
@@ -98,4 +98,5 @@ class Server {
 
 };
 
-module.exports = Server
+module.exports = Server;
+

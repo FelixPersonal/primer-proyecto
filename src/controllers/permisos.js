@@ -1,5 +1,6 @@
 const Permiso = require('../models/permisos');
 const { response } = require('express');
+const Rol = require('../models/roles'); 
 
 const getPermisos = async (req, res = response) => {
     try {

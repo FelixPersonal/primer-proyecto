@@ -152,7 +152,30 @@ const asignarPermisoRol = async (req, res = response) => {
         console.error("Error al asignar permisos al rol:", error);
         res.status(500).json({ error: "Error interno del servidor" });
     }
+    
 };
+
+
+const cambiarEstadoRol = async (req, res = response) => {
+  const { id } = req.params;
+  const { estado } = req.body;
+
+  try {
+      const rol = await Rol.findByPk(id);
+      if (!rol) {
+          return res.status(404).json({ error: `No se encontró un rol con ID ${id}` });
+      }
+
+      await rol.update({ estado });
+
+      res.json({
+          msg: 'El estado del rol fue actualizado exitosamente.'
+      });
+  } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Error al actualizar el estado del rol' });
+  }
+}
 
 
 
@@ -162,6 +185,7 @@ module.exports = {
     postRol,
     putRol,
     deleteRol,
-    asignarPermisoRol
+    asignarPermisoRol,
+    cambiarEstadoRol
 };
 

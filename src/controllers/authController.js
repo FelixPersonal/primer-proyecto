@@ -38,6 +38,12 @@ async function iniciarSesion(req, res = response) {
         res.status(403).json({ mensaje: 'Usuario inactivo, no puede iniciar sesión' });
         return;
       }
+      
+      if (usuarioEncontrado.Rol.estado === 'Inactivo') {
+        res.status(403).json({ mensaje: 'Rol inactivo, no se puede iniciar sesión' });
+        return;
+      }
+
 
       // Formatear la respuesta
       const usuarioFormateado = {
