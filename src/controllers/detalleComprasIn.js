@@ -1,4 +1,5 @@
 const DetalleComprasIn = require('../models/detalleComprasIn');
+const Insumos = require('../models/insumos');
 const { response } = require('express');
 
 const getDetalleComprasIn = async (req, res = response) => {
@@ -50,6 +51,15 @@ const postDetalleCompraIn = async (req, res = response) => {
 
   try {
     const newDetalleCompraIn = await DetalleComprasIn.create(body);
+
+    const insumo = await Insumos.findByPk(body.id_insumo);
+
+    if (insumo) {
+      await insumo.update({
+        precio: body.precioUnitario,
+        stock: insumo.stock + body.cantidad,
+      });
+    }
     res.json(newDetalleCompraIn);
   } catch (error) {
     console.error(error);

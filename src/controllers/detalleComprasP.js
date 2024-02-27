@@ -1,4 +1,5 @@
 const DetalleComprasP = require('../models/detalleComprasP');
+const Productos = require('../models/productos');
 const { response } = require('express');
 
 const getDetalleComprasP = async (req, res = response) => {
@@ -49,7 +50,21 @@ const postDetalleCompraP = async (req, res = response) => {
   const body = req.body;
 
   try {
+    // Crea el nuevo detalle de compra
     const newDetalleCompraP = await DetalleComprasP.create(body);
+
+    // Busca el producto relacionado por su ID
+    const producto = await Productos.findByPk(body.id_producto);
+
+    // Actualiza los campos del producto relacionado
+    if (producto) {
+      await producto.update({
+        precioCosto: body.precioCosto,
+        precioVenta: body.precioVenta,
+        stock: producto.stock + body.cantidad // Incrementa el stock con la cantidad del nuevo detalle de compra
+      });
+    }
+
     res.json(newDetalleCompraP);
   } catch (error) {
     console.error(error);
