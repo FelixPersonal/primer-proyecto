@@ -38,23 +38,55 @@ const getRol = async (req, res) => {
 };
 
 const putRol = async (req, res = response) => {
-    const { id } = req.params;
-    const body = req.body;
-    try {
-        const rol = await Rol.findByPk(id);
-        if (rol) {
-            await rol.update(body);
-            res.json({
-                msg: 'El rol fue actualizado exitosamente.'
-            });
-        } else {
-            res.status(404).send(`No se encontró el rol con ID ${id}`);
-        }
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: 'Error al actualizar el rol' });
+  const { id } = req.params;
+  const { nombre, estado, permisos } = req.body;
+
+  try {
+    const rol = await Rol.findByPk(id, {
+      include: [{ model: Permiso, as: 'permisos' }],
+    });
+
+    if (!rol) {
+      return res.status(404).json({ error: `No se encontró un rol con ID ${id}` });
     }
+
+    // Actualizamos el nombre y el estado del rol
+    await rol.update({ nombre, estado });
+
+    // Si se proporcionan nuevos permisos, los actualizamos
+    if (permisos && permisos.length > 0) {
+      // Verificamos si los permisos son válidos
+      const permisosValidos = await Permiso.findAll({ where: { id_permiso: permisos } });
+
+      if (permisosValidos.length !== permisos.length) {
+        return res.status(400).json({ error: "Uno o más permisos proporcionados son inválidos" });
+      }
+
+      // Identificamos los permisos que se deben eliminar y los que se deben agregar
+      const permisosActuales = rol.permisos.map(permiso => permiso.id_permiso);
+      const permisosEliminar = permisosActuales.filter(idPermiso => !permisos.includes(idPermiso));
+      const permisosAgregar = permisos.filter(idPermiso => !permisosActuales.includes(idPermiso));
+
+      // Eliminamos los permisos que ya no se requieren
+      if (permisosEliminar.length > 0) {
+        await rol.removePermisos(permisosEliminar);
+      }
+
+      // Agregamos los permisos nuevos
+      if (permisosAgregar.length > 0) {
+        await rol.addPermisos(permisosAgregar);
+      }
+    }
+
+    res.json({
+      msg: 'El rol fue actualizado exitosamente.'
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error al actualizar el rol' });
+  }
 }
+
 
 /*
 
@@ -152,7 +184,30 @@ const asignarPermisoRol = async (req, res = response) => {
         console.error("Error al asignar permisos al rol:", error);
         res.status(500).json({ error: "Error interno del servidor" });
     }
+    
 };
+
+
+const cambiarEstadoRol = async (req, res = response) => {
+  const { id } = req.params;
+  const { estado } = req.body;
+
+  try {
+      const rol = await Rol.findByPk(id);
+      if (!rol) {
+          return res.status(404).json({ error: `No se encontró un rol con ID ${id}` });
+      }
+
+      await rol.update({ estado });
+
+      res.json({
+          msg: 'El estado del rol fue actualizado exitosamente.'
+      });
+  } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Error al actualizar el estado del rol' });
+  }
+}
 
 
 
@@ -162,6 +217,7 @@ module.exports = {
     postRol,
     putRol,
     deleteRol,
-    asignarPermisoRol
+    asignarPermisoRol,
+    cambiarEstadoRol
 };
 

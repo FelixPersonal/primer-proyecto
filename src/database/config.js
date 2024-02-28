@@ -2,10 +2,11 @@ const { Sequelize } = require('sequelize')
 
 const sequelize = new Sequelize({
     dialect: 'mysql',
-    host: "",
+    host: "roundhouse.proxy.rlwy.net",
+    port: 51729,
     username: "root",
-    password: "",
-    database: "miConexion",
+    password: "5D4GFhGg1CFhB1eDEGFdDhD6eeEDbgdD",
+    database: "railway",
 })
 
 sequelize
@@ -26,4 +27,4 @@ sequelize.sync()
         console.log("Error al sincronizar las tablas " + err)
     })
 
-module.exports = { sequelize }
+module.exports = { sequelize }  

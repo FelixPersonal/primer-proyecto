@@ -2,7 +2,7 @@ const { DataTypes } = require('sequelize');
 const { sequelize } = require('../database/config');
 
 const Insumo = sequelize.define('Insumo', {
-    id: {
+    id_insumo: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
         allowNull: false,
@@ -20,7 +20,10 @@ const Insumo = sequelize.define('Insumo', {
         type: DataTypes.DECIMAL(10, 2),
         allowNull: false,
     },
-
+    estado: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: true,
+    },
 });
 
 module.exports = Insumo;

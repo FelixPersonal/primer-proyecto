@@ -49,6 +49,17 @@ const postUsuario = async (req, res = response) => {
     }
 
     try {
+        // Verificar si se especificó un rol en los datos del nuevo usuario
+        if (!newEntryData.id_rol) {
+            // Buscar el rol de cliente por nombre y asignar su ID
+            let clienteRol = await Rol.findOne({ where: { nombre: 'cliente' } });
+            if (!clienteRol) {
+                // Si no existe un rol de cliente, asignar un valor predeterminado para el rol de cliente
+                clienteRol = await Rol.findOne({ where: { id_rol: 1 } }); // Buscar el rol con ID 1
+            }
+            newEntryData.id_rol = clienteRol.id_rol;
+        }
+
         const createdUsuarioItem = await Usuario.create(newEntryData);
         res.status(201).json({ message: 'Usuario guardado exitosamente', usuario: createdUsuarioItem });
     } catch (error) {
@@ -134,8 +145,30 @@ const actualizarPerfil = async (req, res) => {
         console.error('Error al actualizar el perfil:', error);
         res.status(500).json({ mensaje: 'Error al actualizar el perfil' });
     }
-};
 
+   
+    
+};
+const actualizarEstadoUsuario = async (req, res = response) => {
+    const { id } = req.params;
+    const { estado } = req.body;
+
+    try {
+        const usuario = await Usuario.findByPk(id);
+
+        if (usuario) {
+            usuario.estado = estado;
+            await usuario.save();
+
+            res.json({ mensaje: 'Estado de usuario actualizado correctamente' });
+        } else {
+            res.status(404).json({ error: `No se encontró un usuario con ID ${id}` });
+        }
+    } catch (error) {
+        console.error('Error al actualizar estado de usuario:', error);
+        res.status(500).json({ error: 'Error al actualizar estado de usuario' });
+    }
+};
 
 
 
@@ -146,4 +179,5 @@ module.exports = {
     putUsuario,
     deleteUsuario,
     actualizarPerfil,
+    actualizarEstadoUsuario
 };

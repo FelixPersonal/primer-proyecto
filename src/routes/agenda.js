@@ -2,7 +2,6 @@ const { Router } = require('express');
 const route = Router();
 const verificarToken = require('../middlewares/verificarToken');
 
-
 const { getAgenda, getAgendas, getAgendaEmpleado, postAgenda, putAgenda, deleteAgenda,disableEvent} = require('../controllers/agenda');
 
 route.use(verificarToken);
@@ -17,3 +16,4 @@ route.put('/agenda/:id/disabled', disableEvent);
 
 
 module.exports = route;
+
