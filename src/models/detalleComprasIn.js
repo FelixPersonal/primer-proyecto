@@ -1,12 +1,12 @@
 const { DataTypes } = require("sequelize");
 const { sequelize } = require("../database/config");
 const Compras = require("./compras");
-const Productos = require("./productos");
+const Insumos = require("./insumos");
 
-const Detallecompras = sequelize.define(
-  "detallecompras",
+const DetalleComprasIn = sequelize.define(
+  "detalleComprasIn",
   {
-    id_detalle: {
+    id_detalleIn: {
       type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true,
@@ -15,7 +15,7 @@ const Detallecompras = sequelize.define(
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    id_producto: {
+    id_insumo: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
@@ -25,14 +25,6 @@ const Detallecompras = sequelize.define(
     },
     precioUnitario: {
       type: DataTypes.FLOAT,
-      allowNull: false,
-    },
-    precioVenta: {
-      type: DataTypes.FLOAT,
-      allowNull: false,
-    },
-    tipoCompra: {
-      type: DataTypes.STRING,
       allowNull: false,
     },
     total: {
@@ -57,7 +49,7 @@ const Detallecompras = sequelize.define(
   }
 );
 
-Detallecompras.belongsTo(Compras, { foreignKey: "id_compra" });
-Detallecompras.belongsTo(Productos, { foreignKey: "id_producto" });
+DetalleComprasIn.belongsTo(Compras, { foreignKey: "id_compra" });
+DetalleComprasIn.belongsTo(Insumos, { foreignKey: "id_insumo" });
 
-module.exports = Detallecompras;
+module.exports = DetalleComprasIn;

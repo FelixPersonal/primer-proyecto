@@ -2,7 +2,7 @@ const { DataTypes } = require('sequelize');
 const { sequelize } = require('../database/config');
 
 const Insumo = sequelize.define('Insumo', {
-    id: {
+    id_insumo: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
         allowNull: false,

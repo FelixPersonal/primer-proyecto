@@ -56,6 +56,10 @@ const Venta = sequelize.define('ventas', {
     type: DataTypes.STRING,
   },
 
+  nombre_empleado: {
+    type: DataTypes.STRING,
+  },
+
   documento: {
     type: DataTypes.STRING, 
   },

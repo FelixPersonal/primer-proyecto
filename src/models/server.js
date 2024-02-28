@@ -4,7 +4,6 @@ const body_parser = require('body-parser')
 const http = require('http');
 const socketIO = require('socket.io');
 const authController = require('../controllers/authController');
-const { sequelize } = require('../database/config');
 const recuperarContrasena = require('../controllers/resetPassword');
 const solicitarRestablecimiento = require('../controllers/resetPassword');
 const editarPerfil = require('../controllers/usuarios')
@@ -70,7 +69,8 @@ class Server {
     this.app.use(this.path, require('../routes/clientes'))
     this.app.use(this.path, require('../routes/servicios'))
     this.app.use(this.path, require('../routes/empleados'))
-    this.app.use(this.path, require('../routes/detalleCompras'))
+    this.app.use(this.path, require('../routes/detalleComprasP'))
+    this.app.use(this.path, require('../routes/detalleComprasIn'))
     this.app.use(this.path, require('../routes/citas_servicios'))
   }
 
