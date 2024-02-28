@@ -12,7 +12,7 @@ const Insumo = sequelize.define('Insumo', {
         type: DataTypes.STRING,
         allowNull: false,
     },
-    stock: {
+    cantidad: {
         type: DataTypes.INTEGER,
         allowNull: false,
     },
@@ -24,6 +24,7 @@ const Insumo = sequelize.define('Insumo', {
         type: DataTypes.BOOLEAN,
         defaultValue: true,
     },
+
 });
 
-module.exports = Insumo;
+module.exports = Insumo;

@@ -67,6 +67,7 @@ CREATE TABLE servicios (
     id_servicio BIGINT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(255),
     valor DECIMAL(10, 2),
+    estado ENUM('Activo', 'Inactivo') DEFAULT 'Activo'
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
@@ -182,6 +183,7 @@ CREATE TABLE insumos (
     nombre VARCHAR(255) NOT NULL,
     cantidad INT,
     precio DECIMAL(10, 2) NOT NULL,
+    estado ENUM('Activo', 'Inactivo') DEFAULT 'Activo'
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
