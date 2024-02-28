@@ -27,11 +27,6 @@ const DetalleComprasIn = sequelize.define(
       type: DataTypes.FLOAT,
       allowNull: false,
     },
-    tipoCompra: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      defaultValue: "Producto",
-    },
     total: {
       type: DataTypes.FLOAT,
       allowNull: false,
