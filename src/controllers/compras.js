@@ -28,35 +28,46 @@ const getCompra = async (req, res = response) => {
   }
 };
 
-const getDetalleComprasP = async (req, res = response) => {
-  const { idCompra } = req.params;
+const getComprasDetalles = async (req, res = response) => {
   try {
-    const detalles = await DetallecomprasP.findAll({
-      where: { id_compra: idCompra },
-      include: [{ model: Compras, where: { id: idCompra } }],
-    });
-    res.json(detalles);
+    // Obtener todas las compras
+    const compras = await Compras.findAll();
+
+    // Verificar si hay compras
+    if (!compras || compras.length === 0) {
+      return res.status(404).json({ error: 'No se encontraron compras' });
+    }
+
+    // Crear un array para almacenar las compras con sus detalles
+    const comprasConDetalles = [];
+
+    // Para cada compra, buscar sus detalles (DetallecomprasP)
+    for (const compra of compras) {
+      const detallesCompraP = await DetallecomprasP.findAll({
+        where: { id_compra: compra.id_compra },
+      });
+
+      // Para cada compra, buscar sus detalles (DetallecomprasIn)
+      const detallesCompraIn = await DetallecomprasIn.findAll({
+        where: { id_compra: compra.id_compra },
+      });
+      
+      // Agregar la compra y sus detalles al array
+      comprasConDetalles.push({
+        compra,
+        detallesCompraP,
+        detallesCompraIn,
+      });
+    }
+
+    // Responder con el array de compras y detalles
+    res.json(comprasConDetalles);
   } catch (error) {
     console.error(error);
-    res.status(500).json({
-      error: "Error al obtener los detalles de la compra de productos",
-    });
+    res.status(500).json({ error: 'Error al obtener las compras y sus detalles' });
   }
 };
 
-const getDetalleComprasIn = async (req, res = response) => {
-  const { idCompra } = req.params;
-  try {
-    const detalles = await DetallecomprasIn.findAll({
-      where: { id_compra: idCompra },
-      include: [{ model: Compras, where: { id: idCompra } }],
-    });
-    res.json(detalles);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Error al obtener los detalles de la compra de insumos" });
-  }
-};
 
 
 const putCompra = async (req, res = response) => {
@@ -144,8 +155,7 @@ const deleteCompra = async (req, res = response) => {
 module.exports = {
   getCompra,
   getCompras,
-  getDetalleComprasP,
-  getDetalleComprasIn,
+  getComprasDetalles,
   postCompra,
   putCompra,
   deleteCompra,
