@@ -18,10 +18,6 @@ const Compras = sequelize.define(
       type: DataTypes.STRING,
       allowNull: false,
     },
-    descripcion: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
     tipoCompra: {
       type: DataTypes.STRING,
       allowNull: false,
