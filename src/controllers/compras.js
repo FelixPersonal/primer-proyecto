@@ -33,16 +33,14 @@ const getDetalleComprasP = async (req, res = response) => {
   try {
     const detalles = await DetallecomprasP.findAll({
       where: { id_compra: idCompra },
-      include: [{ model: Compras, where: { id: idCompra } }], // Incluir datos de la compra asociada filtrando por el idCompra
+      include: [{ model: Compras, where: { id: idCompra } }],
     });
     res.json(detalles);
   } catch (error) {
     console.error(error);
-    res
-      .status(500)
-      .json({
-        error: "Error al obtener los detalles de la compra de productos",
-      });
+    res.status(500).json({
+      error: "Error al obtener los detalles de la compra de productos",
+    });
   }
 };
 
@@ -51,16 +49,15 @@ const getDetalleComprasIn = async (req, res = response) => {
   try {
     const detalles = await DetallecomprasIn.findAll({
       where: { id_compra: idCompra },
-      include: [{ model: Compras, where: { id: idCompra } }], // Incluir datos de la compra asociada filtrando por el idCompra
+      include: [{ model: Compras, where: { id: idCompra } }],
     });
     res.json(detalles);
   } catch (error) {
     console.error(error);
-    res
-      .status(500)
-      .json({ error: "Error al obtener los detalles de la compra de insumos" });
+    res.status(500).json({ error: "Error al obtener los detalles de la compra de insumos" });
   }
 };
+
 
 const putCompra = async (req, res = response) => {
   const { id } = req.params;
