@@ -127,6 +127,7 @@ const postCompra = async (req, res = response) => {
 
   try {
     const newCompra = await Compras.create(body);
+    console.log(newCompra)
     res.json(newCompra);
   } catch (error) {
     console.error(error);
