@@ -1,22 +1,23 @@
-const DetalleCompras = require('../models/detalleCompras');
+const DetalleComprasIn = require('../models/detalleComprasIn');
+const Insumos = require('../models/insumos');
 const { response } = require('express');
 
-const getDetalleCompras = async (req, res = response) => {
+const getDetalleComprasIn = async (req, res = response) => {
   try {
-    const listDetalleCompras = await DetalleCompras.findAll();
-    res.json({ listDetalleCompras });
+    const listDetalleComprasIn = await DetalleComprasIn.findAll();
+    res.json({ listDetalleComprasIn });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Error al obtener la lista de detalles de compras' });
   }
 };
 
-const getDetalleCompra = async (req, res = response) => {
+const getDetalleCompraIn = async (req, res = response) => {
   const { id } = req.params;
   try {
-    const detalleCompra = await DetalleCompras.findByPk(id);
-    if (detalleCompra) {
-      res.json(detalleCompra);
+    const detalleCompraIn = await DetalleComprasIn.findByPk(id);
+    if (detalleCompraIn) {
+      res.json(detalleCompraIn);
     } else {
       res.status(404).json({ error: `No se encontró el detalle de compra con ID ${id}` });
     }
@@ -26,15 +27,15 @@ const getDetalleCompra = async (req, res = response) => {
   }
 };
 
-const putDetalleCompra = async (req, res = response) => {
+const putDetalleCompraIn = async (req, res = response) => {
   const { id } = req.params;
   const body = req.body;
 
   try {
-    const detalleCompra = await DetalleCompras.findByPk(id);
+    const detalleCompraIn = await DetalleComprasIn.findByPk(id);
 
-    if (detalleCompra) {
-      await detalleCompra.update(body);
+    if (detalleCompraIn) {
+      await detalleCompraIn.update(body);
       res.json({ msg: 'El detalle de compra fue actualizado exitosamente' });
     } else {
       res.status(404).json({ error: `No se encontró el detalle de compra con ID ${id}` });
@@ -45,26 +46,35 @@ const putDetalleCompra = async (req, res = response) => {
   }
 };
 
-const postDetalleCompra = async (req, res = response) => {
+const postDetalleCompraIn = async (req, res = response) => {
   const body = req.body;
 
   try {
-    const newDetalleCompra = await DetalleCompras.create(body);
-    res.json(newDetalleCompra);
+    const newDetalleCompraIn = await DetalleComprasIn.create(body);
+
+    const insumo = await Insumos.findByPk(body.id_insumo);
+
+    if (insumo) {
+      await insumo.update({
+        precio: body.precioUnitario,
+        stock: insumo.stock + body.cantidad,
+      });
+    }
+    res.json(newDetalleCompraIn);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Error al crear el detalle de compra' });
   }
 };
 
-const deleteDetalleCompra = async (req, res = response) => {
+const deleteDetalleCompraIn = async (req, res = response) => {
   const { id } = req.params;
 
   try {
-    const detalleCompra = await DetalleCompras.findByPk(id);
+    const detalleCompraIn = await DetalleComprasIn.findByPk(id);
 
-    if (detalleCompra) {
-      await detalleCompra.destroy();
+    if (detalleCompraIn) {
+      await detalleCompraIn.destroy();
       res.json('El detalle de compra fue eliminado exitosamente');
     } else {
       res.status(404).json({ error: `No se encontró el detalle de compra con ID ${id}` });
@@ -76,9 +86,9 @@ const deleteDetalleCompra = async (req, res = response) => {
 };
 
 module.exports = {
-  getDetalleCompra,
-  getDetalleCompras,
-  postDetalleCompra,
-  putDetalleCompra,
-  deleteDetalleCompra
+  getDetalleCompraIn,
+  getDetalleComprasIn,
+  postDetalleCompraIn,
+  putDetalleCompraIn,
+  deleteDetalleCompraIn
 };

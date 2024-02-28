@@ -1,31 +1,39 @@
 const { DataTypes } = require("sequelize");
 const { sequelize } = require("../database/config");
-const Proveedor = require("./proveedores");
+const Compras = require("./compras");
+const Productos = require("./productos");
 
-const Compras = sequelize.define(
-  "Compras",
+const DetalleComprasP = sequelize.define(
+  "detalleComprasP",
   {
-    id_compra: {
+    id_detalleP: {
       type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true,
     },
-    id_proveedor: {
+    id_compra: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    no_factura: {
-      type: DataTypes.STRING,
+    id_producto: {
+      type: DataTypes.INTEGER,
       allowNull: false,
     },
-    tipoCompra: {
-      type: DataTypes.STRING,
+    cantidad: {
+      type: DataTypes.INTEGER,
       allowNull: false,
     },
-    estado: {
-      type: DataTypes.STRING,
+    precioUnitario: {
+      type: DataTypes.FLOAT,
       allowNull: false,
-      defaultValue: "Pendiente"
+    },
+    precioVenta: {
+      type: DataTypes.FLOAT,
+      allowNull: false,
+    },
+    total: {
+      type: DataTypes.FLOAT,
+      allowNull: false,
     },
     created_at: {
       type: DataTypes.DATE,
@@ -45,6 +53,7 @@ const Compras = sequelize.define(
   }
 );
 
-Compras.belongsTo(Proveedor, { foreignKey: "id_proveedor" });
+DetalleComprasP.belongsTo(Compras, { foreignKey: "id_compra" });
+DetalleComprasP.belongsTo(Productos, { foreignKey: "id_producto" });
 
-module.exports = Compras;
+module.exports = DetalleComprasP;

@@ -12,11 +12,10 @@ const {
 } = require('../controllers/insumos');
 
 
-router.use(verificarToken);
-router.get('/insumos', getInsumos);
-router.get('/insumos/:id', getInsumo);
-router.post('/insumos', postInsumo);
-router.put('/insumos/:id', putInsumo);
-router.delete('/insumos/:id', deleteInsumo);
+router.get('/insumos', verificarToken, getInsumos);
+router.get('/insumos/:id',verificarToken, getInsumo);
+router.post('/insumos',verificarToken, postInsumo);
+router.put('/insumos/:id',verificarToken, putInsumo);
+router.delete('/insumos/:id',verificarToken, deleteInsumo);
 
 module.exports = router;

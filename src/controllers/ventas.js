@@ -6,6 +6,7 @@ const Citas = require('../models/citas')
 
 const { response } = require('express');
 const Clientes = require('../models/clientes');
+const Empleado = require('../models/empleados');
 
 const getVentas = async (req, res = response) => {
   try {
@@ -47,6 +48,11 @@ const postVentas = async (req, res = response) => {
     if (!cliente) {
       return res.status(404).json({ error: 'Cliente no encontrado' });
     }
+
+    const empleado = await Empleado.findByPk(nueva_venta.empleadoId);
+    if (!empleado) {
+      return res.status(404).json({ error: 'Empleado no encontrado' });
+    }
     // Crear la venta
     const productos = nueva_venta.productos;
     const servicios = nueva_venta.servicios;
@@ -63,7 +69,8 @@ const postVentas = async (req, res = response) => {
       estado_anulado: 'Activo',
       nombre: cliente.nombre,
       apellido: cliente.apellido,
-      documento: cliente.documento
+      documento: cliente.documento,
+      nombre_empleado: empleado.nombre
     });
     let id_venta = venta.get('id_ventas');
     console.log(productos)
