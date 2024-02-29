@@ -20,10 +20,12 @@ const Productos = sequelize.define('productos', {
   },
 
   precioCosto: {
-    type: DataTypes.DOUBLE,
+    type: DataTypes.DECIMAL(10, 2),
     allowNull: true,
     defaultValue: 0, 
   },
+  
+
 
   precioVenta: {
     type: DataTypes.DOUBLE,
