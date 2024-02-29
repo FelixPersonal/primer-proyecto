@@ -57,7 +57,7 @@ const postDetalleCompraIn = async (req, res = response) => {
     if (insumo) {
       await insumo.update({
         precio: body.precioUnitario,
-        stock: insumo.stock + body.cantidad,
+        cantidad: insumo.cantidad + body.cantidad,
       });
     }
     res.json(newDetalleCompraIn);
