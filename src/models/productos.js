@@ -25,10 +25,24 @@ const Productos = sequelize.define('productos', {
     allowNull: true,
     defaultValue: 0,
   },
+  
   stock: {
     type: DataTypes.INTEGER,
     allowNull: true,
     defaultValue: 0,
+  },
+
+  tipoCompra: {
+    type: DataTypes.STRING,
+    allowNull: false,
+    validate: {
+      notNull: {
+        msg: "El tipo de compra es requerido",
+      },
+      notEmpty: {
+        msg: "El tipo de compra no puede estar vacío",
+      },
+    },
   },
   estado: {
     type: DataTypes.ENUM('Activo', 'Inactivo'),
