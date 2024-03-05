@@ -9,7 +9,6 @@ const Clientes = sequelize.define('clientes', {
     allowNull: false,
     primaryKey: true,
   },
-
   nombre: {
     type: DataTypes.STRING,
     allowNull: false
@@ -22,7 +21,6 @@ const Clientes = sequelize.define('clientes', {
     type:DataTypes.STRING,
     allowNull: false
   },
-
   correo: {
     type: DataTypes.STRING,
     allowNull: false
