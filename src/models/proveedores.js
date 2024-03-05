@@ -7,6 +7,23 @@ const Proveedores = sequelize.define('proveedores', {
     primaryKey: true,
     autoIncrement: true,
   },
+  tipo_documento: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  num_documento: {
+    type: DataTypes.STRING,
+    allowNull: false,
+    unique: {
+      name: 'num_documento',
+      msg: 'El número de documento ya está en uso',
+    },
+    validate: {
+      isNumeric: {
+        msg: 'El número de documento debe ser numérico',
+      },
+    },
+  },
   nombre: {
     type: DataTypes.STRING,
     allowNull: false,
@@ -35,10 +52,6 @@ const Proveedores = sequelize.define('proveedores', {
         msg: 'El email debe tener un formato válido',
       },
     },
-  },
-  tipo_de_producto_servicio: {
-    type: DataTypes.STRING,
-    allowNull: false,
   },
   estado: {
     type: DataTypes.STRING,
