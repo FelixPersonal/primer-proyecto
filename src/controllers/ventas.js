@@ -157,11 +157,11 @@ const postVentas = async (req, res = response) => {
 function calculateTotalPrice(productos, servicios) {
   let totalPrice = 0;
   for (const producto of productos) {
-    const precioFloat = parseFloat(producto.precioTotal);
+    const precioFloat = parseFloat(producto.precioVenta);
     totalPrice += producto.cantidad * precioFloat;
   }
   for (const servicio of servicios) {
-    const precioFloat = parseFloat(servicio.precioTotal);
+    const precioFloat = parseFloat(servicio.precioVenta);
     totalPrice += servicio.cantidad * precioFloat;
   }
   return totalPrice;
