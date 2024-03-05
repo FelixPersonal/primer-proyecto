@@ -79,13 +79,13 @@ const postVentas = async (req, res = response) => {
     if (productos.length > 0) {
       console.log('Entramos al detalle de productos')
       for (let producto of productos) {
-        var valor_total = producto.cantidad * producto.precioVenta;
+        var valor_total = producto.cantidad * producto.precioTotal;
         try {
           let detalle_prod = await DetalleProducto.create({
             id_ventas: id_venta,
             id_producto: producto.id,
             cantidad: producto.cantidad,
-            valor_venta: producto.precioVenta,
+            valor_venta: producto.precioTotal,
             valor_total: valor_total
           });
           console.log('producto registrado')
@@ -157,11 +157,11 @@ const postVentas = async (req, res = response) => {
 function calculateTotalPrice(productos, servicios) {
   let totalPrice = 0;
   for (const producto of productos) {
-    const precioFloat = parseFloat(producto.precioVenta);
+    const precioFloat = parseFloat(producto.precioTotal);
     totalPrice += producto.cantidad * precioFloat;
   }
   for (const servicio of servicios) {
-    const precioFloat = parseFloat(servicio.precioVenta);
+    const precioFloat = parseFloat(servicio.precioTotal);
     totalPrice += servicio.cantidad * precioFloat;
   }
   return totalPrice;
