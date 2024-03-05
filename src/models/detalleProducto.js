@@ -27,7 +27,7 @@ const DetalleProducto = sequelize.define('detalleproducto', {
         type: DataTypes.INTEGER,
         allowNull: false
     },
-    precioUnitario: {
+    valor_venta: {
         type: DataTypes.DOUBLE,
         allowNull: false
     },
