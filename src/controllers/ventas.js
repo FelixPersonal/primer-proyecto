@@ -87,7 +87,11 @@ const postVentas = async (req, res = response) => {
             cantidad: producto.cantidad,
             valor_venta: producto.precioTotal,
             valor_total: valor_total
+            
           });
+          console.log(precioTotal)
+          console.log(precioUnitario)
+
           console.log('producto registrado')
         } catch (error) {
           console.error('Error al registrar el producto:', error);
