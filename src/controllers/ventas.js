@@ -158,11 +158,11 @@ function calculateTotalPrice(productos, servicios) {
   let totalPrice = 0;
   for (const producto of productos) {
     const precioFloat = parseFloat(producto.precioTotal);
-    totalPrice += producto.cantidad * precioFloat;
+    totalPrice += 1 * precioFloat;
   }
   for (const servicio of servicios) {
     const precioFloat = parseFloat(servicio.precioTotal);
-    totalPrice += servicio.cantidad * precioFloat;
+    totalPrice += 1 * precioFloat;
   }
   return totalPrice;
 }
