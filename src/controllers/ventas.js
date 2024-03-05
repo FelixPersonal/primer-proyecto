@@ -86,7 +86,7 @@ const postVentas = async (req, res = response) => {
             id_producto: producto.id,
             cantidad: producto.cantidad,
             valor_venta: producto.precioTotal,
-            valor_total: valor_total
+            valor_total: totalPrice
           });
           console.log('producto registrado')
         } catch (error) {
@@ -114,7 +114,7 @@ const postVentas = async (req, res = response) => {
             id_servicio: servicio.id,
             cantidad: servicio.cantidad,
             valor_venta: servicio.precioTotal,
-            valor_total: valor_total
+            valor_total: totalPrice
           });
           console.log('servicio registrado')
         } catch (error) {
