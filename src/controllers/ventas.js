@@ -79,7 +79,7 @@ const postVentas = async (req, res = response) => {
     if (productos.length > 0) {
       console.log('Entramos al detalle de productos')
       for (let producto of productos) {
-        var valor_total = producto.cantidad * producto.precioTotal;
+        var valor_total = producto.cantidad * producto.precioTotal /2;
         try {
           let detalle_prod = await DetalleProducto.create({
             id_ventas: id_venta,
@@ -158,11 +158,11 @@ function calculateTotalPrice(productos, servicios) {
   let totalPrice = 0;
   for (const producto of productos) {
     const precioFloat = parseFloat(producto.precioTotal);
-    totalPrice += producto.cantidad * precioFloat /2;
+    totalPrice += producto.cantidad * precioFloat;
   }
   for (const servicio of servicios) {
     const precioFloat = parseFloat(servicio.precioTotal);
-    totalPrice += servicio.cantidad * precioFloat /2;
+    totalPrice += servicio.cantidad * precioFloat;
   }
   return totalPrice;
 }
