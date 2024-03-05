@@ -79,7 +79,7 @@ const postVentas = async (req, res = response) => {
     if (productos.length > 0) {
       console.log('Entramos al detalle de productos')
       for (let producto of productos) {
-        var valor_total = producto.cantidad * producto.precioUnitario;
+        var valor_total = valor_total;
         try {
           let detalle_prod = await DetalleProducto.create({
             id_ventas: id_venta,
