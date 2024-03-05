@@ -107,13 +107,13 @@ const postVentas = async (req, res = response) => {
     if (servicios.length > 0) {
       console.log('Entramos al detalle de servicios')
       for (let servicio of servicios) {
-        var valor_total = servicio.cantidad * servicio.precioTotal;
+        var valor_total = servicio.cantidad * servicio.precioVenta;
         try {
           await DetalleServicio.create({
             id_ventas: id_venta,
             id_servicio: servicio.id,
             cantidad: servicio.cantidad,
-            valor_venta: servicio.precioTotal,
+            valor_venta: servicio.precioVenta,
             valor_total: valor_total
           });
           console.log('servicio registrado')

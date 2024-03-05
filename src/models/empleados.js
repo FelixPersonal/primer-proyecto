@@ -11,7 +11,7 @@ const Empleado = sequelize.define('empleados', {
     type: DataTypes.STRING(255),
     allowNull: false,
     validate: {
-      is: /^[A-Za-z ]+$/,
+      is: /^[A-Za-z0-9 ]+$/,
     },
   },
   apellido: {
@@ -37,7 +37,7 @@ const Empleado = sequelize.define('empleados', {
       msg: 'Este documento ya ha sido registrado en otro empleado.'
     },
     validate: {
-      is: /^\d{7,10}$/,
+      is: /^\d{6,10}$/,
     },
   },
   telefono: {
