@@ -33,8 +33,8 @@ const getVenta = async (req, res = response) => {
       res.status(404).json({ error: `No se encontró ninguna venta con el nombre: ${nombre}` });
     }
   } catch (error) {
-    console.error('Error al obtener la venta:', error);
-    res.status(500).json({ error: 'Error interno del servidor al obtener la venta' });
+    console.error(error);
+    res.status(500).json({ error: 'Error a obtener la venta' });
   }
 };
 
