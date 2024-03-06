@@ -18,24 +18,24 @@ const getVentas = async (req, res = response) => {
     console.error(error);
     res.status(500).json({ error: 'Error al obtener elementos de Venta' });
   }
-}
+};
 
 
 const getVenta = async (req, res = response) => {
-  const id_ventas = req.params.id;
+  const id_venta = req.params.id;
   try {
-    const venta = await Venta.findByPk(id_ventas);
+    const venta = await Venta.findByPk(id_venta);
 
     if (venta) {
       res.json(venta);
     } else {
-      res.status(404).json({ error: `No se encontró un elemento de Venta con ID ${nombre}` });
+      res.status(404).json({ error: `No se encontró un elemento de Venta con ID ${id_venta}` });
     }
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Error al obtener el elemento de Venta' });
   }
-}
+};
 
 
 const postVentas = async (req, res = response) => {
