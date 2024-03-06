@@ -23,14 +23,15 @@ const getVentas = async (req, res = response) => {
 
 const getVenta = async (req, res = response) => {
   const id_ventas = req.params.id;
-  try {
-    console.log("ID de venta recibido:", id_ventas); // Añade este log para verificar el valor de id_venta
-    const venta = await Venta.findByPk(id_ventas);
 
-    if (venta) {
-      res.json(venta);
+  try {
+
+    const ventas = await Venta.findByPk(id_ventas);
+    
+    if (ventas) {
+      res.json(ventas);
     } else {
-      res.status(404).json({ error: `No se encontró un elemento de Venta con ID ${id_ventas}` });
+      res.status(404).json({ error: `No se encontró un elemento del nombre ${nombre}` });
     }
   } catch (error) {
     console.error(error);
