@@ -23,7 +23,7 @@ const getVentas = async (req, res = response) => {
 
 const getVenta = async (req, res = response) => {
 
-  const { id_ventas } = req.params.id;
+  const  id_ventas  = req.params.id;
 
   try {
 
