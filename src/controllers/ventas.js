@@ -23,7 +23,7 @@ const getVentas = async (req, res = response) => {
 
 const getVenta = async (req, res = response) => {
 
-  const id_ventas = req.params.id;
+  const id_ventas = req.params;
 
   try {
 
@@ -35,7 +35,7 @@ const getVenta = async (req, res = response) => {
       res.status(404).json({ error: `No se encontró ninguna venta con el documento: ${id_ventas}` });
     }
   } catch (error) {
-    console.error(error); // Imprimir el error para obtener más detalles
+    console.error(error); 
     res.status(500).json({ error: 'Error al obtener la venta' });
   }
 };
