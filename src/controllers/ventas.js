@@ -22,7 +22,7 @@ const getVentas = async (req, res = response) => {
 
 
 const getVenta = async (req, res = response) => {
-  const id_ventas = req.params;
+  const id_ventas = req.params.id;
 
   try {
     const ventas = await Venta.findByPk(id_ventas);
