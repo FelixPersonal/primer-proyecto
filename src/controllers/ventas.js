@@ -24,6 +24,7 @@ const getVentas = async (req, res = response) => {
 const getVenta = async (req, res = response) => {
   const id_ventas = req.params.id;
   try {
+    console.log("ID de venta recibido:", id_ventas); // Añade este log para verificar el valor de id_venta
     const venta = await Venta.findByPk(id_ventas);
 
     if (venta) {
