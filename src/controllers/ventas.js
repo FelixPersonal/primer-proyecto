@@ -79,9 +79,9 @@ const postVentas = async (req, res = response) => {
     console.log(servicios)
     // Agregar detalles de productos
     if (productos.length > 0) {
-      console.log('Entramos al detalle de productos')
+      console.log('Entramos al detalle de productos', productos)
       for (let producto of productos) {
-        var valor_total = producto.cantidad * producto.precioTotal;
+        var valor_total = producto.cantidad * producto.precio;
         try {
           let detalle_prod = await DetalleProducto.create({
             id_ventas: id_venta,
@@ -107,9 +107,9 @@ const postVentas = async (req, res = response) => {
     }
 
     if (servicios.length > 0) {
-      console.log('Entramos al detalle de servicios')
+      console.log('Entramos al detalle de servicios', servicios)
       for (let servicio of servicios) {
-        var valor_total = servicio.cantidad * servicio.precioTotal;
+        var valor_total = servicio.cantidad * servicio.precio;
         try {
           await DetalleServicio.create({
             id_ventas: id_venta,
