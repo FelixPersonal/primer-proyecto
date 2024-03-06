@@ -1,4 +1,4 @@
-const Venta = require('../models/ventas');
+const Venta = require ('../models/ventas');
 const DetalleProducto = require('../models/detalleProducto');
 const DetalleServicio = require('../models/detalleServicio');
 const Producto = require('../models/productos')
@@ -87,7 +87,7 @@ const postVentas = async (req, res = response) => {
             id_ventas: id_venta,
             id_producto: producto.id,
             cantidad: producto.cantidad,
-            valor_venta: producto.precioTotal,
+            valor_venta: producto.precioUnitario,
             valor_total: valor_total
           });
           console.log('producto registrado')
@@ -115,7 +115,7 @@ const postVentas = async (req, res = response) => {
             id_ventas: id_venta,
             id_servicio: servicio.id,
             cantidad: servicio.cantidad,
-            valor_venta: servicio.precioTotal,
+            valor_venta: servicio.precioUnitario,
             valor_total: valor_total
           });
           console.log('servicio registrado')
