@@ -22,15 +22,15 @@ const getVentas = async (req, res = response) => {
 
 
 const getVenta = async (req, res = response) => {
-  const id_venta = req.params.id;
+  const id_ventas = req.params;
 
   try {
-    const venta = await Venta.findByPk(id_venta);
+    const ventas = await Venta.findByPk(id_ventas);
 
-    if (venta) {
-      res.json(venta);
+    if (ventas) {
+      res.json(ventas);
     } else {
-      res.status(404).json({ error: `No se encontró ninguna venta con el ID ${id_venta}` });
+      res.status(404).json({ error: `No se encontró ninguna venta con el ID ${id_ventas}` });
     }
   } catch (error) {
     console.error('Error al obtener la venta:', error);
