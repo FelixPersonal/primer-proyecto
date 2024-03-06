@@ -30,7 +30,7 @@ const getVenta = async (req, res = response) => {
     if (ventas) {
       res.json(ventas);
     } else {
-      res.status(404).json({ error: `No se encontró ninguna venta con el ID ${id_ventas}` });
+      res.status(404).json({ error: `No se encontró ninguna venta con el nombre: ${nombre}` });
     }
   } catch (error) {
     console.error('Error al obtener la venta:', error);
