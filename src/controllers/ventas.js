@@ -28,10 +28,12 @@ const getVenta = async (req, res = response) => {
     console.log('ID de ventas:', id_ventas); // Verificar el valor de id_ventas
     const ventas = await Venta.findByPk(id_ventas);
 
+    console.log('Venta encontrada:', ventas); // Verificar si se encontró la venta
+
     if (ventas) {
       res.json(ventas);
     } else {
-      res.status(404).json({ error: `No se encontró ninguna venta con el ID: ${documento}` });
+      res.status(404).json({ error: `No se encontró ninguna venta con el ID: ${id_ventas}` });
     }
   } catch (error) {
     console.error('Error al obtener la venta:', error); // Imprimir el error para obtener más detalles
