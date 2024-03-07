@@ -14,7 +14,7 @@ const getAgendas = async (req, res = response) => {
 
 const getAgendasActivas = async (req, res = response) => {
     try {
-        const agendas = await Agenda.findAll({where: { estado: "true" } });
+        const agendas = await Agenda.findAll({where: { estado: "false" } });
         res.json({ agendas });
     } catch (error) {
         console.error(error);
@@ -31,6 +31,9 @@ const getAgendaEmpleado = async (req, res = response) => {
             include: [{
                 model: Empleado, // Modelo de empleado
                 attributes: ['id_empleado', 'nombre', 'apellido', 'correo', 'documento', 'telefono', 'estado'], // Selecciona los campos que deseas obtener
+                where: {
+                    estado: 'Activo' // Filtra solo los empleados con estado 'Activo'
+                }
             }],
         });
 
