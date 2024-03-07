@@ -12,13 +12,15 @@ const Insumo = sequelize.define('Insumo', {
         type: DataTypes.STRING,
         allowNull: false,
     },
-    cantidad: {
+    stock: {
         type: DataTypes.INTEGER,
         allowNull: false,
+        defaultValue: 0,
     },
     precio: {
         type: DataTypes.DECIMAL(10, 2),
         allowNull: false,
+        defaultValue: 0,
     },
     estado: {
         type: DataTypes.BOOLEAN,
