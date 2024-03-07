@@ -59,7 +59,7 @@ const postDetalleCompraP = async (req, res = response) => {
     // Actualiza los campos del producto relacionado
     if (producto) {
       await producto.update({
-        precioCosto: body.precioCosto,
+        precioCosto: body.precioUnitario,
         precioVenta: body.precioVenta,
         stock: producto.stock + body.cantidad // Incrementa el stock con la cantidad del nuevo detalle de compra
       });
