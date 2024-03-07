@@ -35,6 +35,15 @@ const getAgendaEmpleado = async (req, res = response) => {
     }
 };
 
+const getEmpleadoActivos = async (req, res = response )=>{
+    try {
+        const getEmpleados = await Empleado.findAll({where: {estado:"Activo" }});
+        res.json(getEmpleados);
+    } catch (error) {
+        res.status(500).json({ error: 'Error al obtener el elemento empleado Activo '});
+    }
+}
+
 
 const getAgenda = async (req, res = response) => {
     const { id } = req.params;
@@ -151,6 +160,7 @@ const disableEvent = async (req, res) => {
 };
 
 module.exports = {
+    getEmpleadoActivos,
     disableEvent,
     getAgenda,
     getAgendas,
