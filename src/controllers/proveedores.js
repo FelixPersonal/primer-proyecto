@@ -20,7 +20,6 @@ const getProveedoresActivos = async (req, res = response) => {
     console.error(error);
     res.status(500).json({ error: 'Error al obtener la lista de proveedores' });
   }
-
 }
 
 const getProveedor = async (req, res = response) => {
