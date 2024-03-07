@@ -14,7 +14,7 @@ const getAgendas = async (req, res = response) => {
 
 const getAgendasActivas = async (req, res = response) => {
     try {
-        const agendas = await Agenda.findAll({where: { estado: "Activo" } });
+        const agendas = await Agenda.findAll({where: { estado: "true" } });
         res.json({ agendas });
     } catch (error) {
         console.error(error);
