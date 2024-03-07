@@ -3,10 +3,11 @@ const route = Router();
 const verificarToken = require('../middlewares/verificarToken');
 
 
-const { getProveedor,getProveedores, postProveedor, putProveedor, deleteProveedor, getProveedorProductos, cambiarEstadoProveedor } = require('../controllers/proveedores');
+const { getProveedor,getProveedores, postProveedor, putProveedor, deleteProveedor, getProveedorProductos, cambiarEstadoProveedor, getProveedoresActivos } = require('../controllers/proveedores');
 
 route.get('/proveedores',verificarToken, getProveedores);
 route.get('/proveedores',verificarToken, getProveedores);
+route.get('/proveedores/activos',verificarToken, getProveedoresActivos);
 route.get('/proveedores/:id',verificarToken, getProveedor);
 route.get('/proveedores/productos/:id',verificarToken, getProveedorProductos);
 route.post('/proveedores',verificarToken, postProveedor);
