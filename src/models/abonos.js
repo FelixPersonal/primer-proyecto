@@ -30,14 +30,9 @@ const Abonos = sequelize.define('abonos', {
         defaultValue: 0,
     },
 
-    nombre: {
-        type: DataTypes.STRING,
-        allowNull:true
-    },
-
-    documento: {
-        type: DataTypes.STRING,
-        allowNull:true
+    fecha_abono: {
+        type: DataTypes.DATE,
+        allowNull: true,
     }
 },{
     sequelize,

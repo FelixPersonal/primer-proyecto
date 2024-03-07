@@ -11,6 +11,10 @@ const getAbonos = async (req, res = response) => {
     }
 };
 
+const postAbonos = async (req, res = response) => {
+    
+};
+
 module.exports = {
     getAbonos
 };
