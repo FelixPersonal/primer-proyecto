@@ -12,6 +12,16 @@ const getAgendas = async (req, res = response) => {
     }
 };
 
+const getAgendasActivas = async (req, res = response) => {
+    try {
+        const agendas = await Agenda.findAll({where: { estado: "Activo" } });
+        res.json({ agendas });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Error al obtener elementos de Agenda' });
+    }
+};
+
 const getAgendaEmpleado = async (req, res = response) => {
     const { id } = req.params;
 
@@ -34,16 +44,6 @@ const getAgendaEmpleado = async (req, res = response) => {
         res.status(500).json({ error: 'Error al obtener el elemento de Agenda con datos de empleado' });
     }
 };
-
-const getEmpleadoActivos = async (req, res = response )=>{
-    try {
-        const getEmpleados = await Empleado.findAll({where: {estado:"Activo" }});
-        res.json(getEmpleados);
-    } catch (error) {
-        res.status(500).json({ error: 'Error al obtener el elemento empleado Activo '});
-    }
-}
-
 
 const getAgenda = async (req, res = response) => {
     const { id } = req.params;
@@ -160,7 +160,7 @@ const disableEvent = async (req, res) => {
 };
 
 module.exports = {
-    getEmpleadoActivos,
+    getAgendasActivas,
     disableEvent,
     getAgenda,
     getAgendas,
