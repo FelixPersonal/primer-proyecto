@@ -12,6 +12,17 @@ const getProveedores = async (req, res = response) => {
   }
 }
 
+const getProveedoresActivos = async (req, res = response) => {
+  try {
+    const listProveedores = await Proveedores.findAll({ where: { estado: "Activo" } });
+    res.json({ listProveedores });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error al obtener la lista de proveedores' });
+  }
+
+}
+
 const getProveedor = async (req, res = response) => {
   const { id } = req.params;
   try {
@@ -127,6 +138,7 @@ const deleteProveedor = async (req, res = response) => {
 module.exports = {
   getProveedor,
   getProveedores,
+  getProveedoresActivos,
   getProveedorProductos,
   postProveedor,
   putProveedor,
