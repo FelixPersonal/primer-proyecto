@@ -42,7 +42,7 @@ const postAbonos = async (req, res = response) => {
         // Verificar si la venta está completamente pagada
         if (nuevo_precio_pendiente <= 0) {
             // Si el precio pendiente es menor o igual a cero, marcar la venta como pagada
-            await venta.update({ estado: 'Pagada' });
+            await venta.update({ estado: 'Cancelado' });
         }
 
         // Crear el abono asociado a la venta
