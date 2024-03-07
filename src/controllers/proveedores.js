@@ -14,7 +14,7 @@ const getProveedores = async (req, res = response) => {
 
 const getProveedoresActivos = async (req, res = response) => {
   try {
-    const listProveedores = await Proveedores.findAll({ where: { estado: Activo } });
+    const listProveedores = await Proveedores.findAll({ where: { estado: "Activo" } });
     res.json({ listProveedores });
   } catch (error) {
     console.error(error);
