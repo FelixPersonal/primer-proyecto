@@ -72,6 +72,7 @@ class Server {
     this.app.use(this.path, require('../routes/detalleComprasP'))
     this.app.use(this.path, require('../routes/detalleComprasIn'))
     this.app.use(this.path, require('../routes/citas_servicios'))
+    this.app.use(this.path, require('../routes/abonos'))
   }
 
   sockets() {
