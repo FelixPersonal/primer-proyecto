@@ -30,8 +30,8 @@ const postAbonos = async (req, res = response) => {
         }
 
         // Obtener el precio total de la venta y el precio pendiente actual
-        const precio_total_venta = venta.precio;
-        let precio_pendiente_actual = venta.precio_pendiente;
+        //const precio_total_venta = venta.precio;
+        let precio_pendiente_actual = venta.precio;
 
         // Calcular el precio pendiente después del abono
         const nuevo_precio_pendiente = precio_pendiente_actual - monto_abono;
