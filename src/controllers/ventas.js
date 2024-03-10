@@ -86,6 +86,7 @@ const postVentas = async (req, res = response) => {
           let detalle_prod = await DetalleProducto.create({
             id_ventas: id_venta,
             id_producto: producto.id,
+            nombre: producto.nombre,
             cantidad: producto.cantidad,
             valor_venta: producto.precioUnitario,
             valor_total: valor_total
@@ -114,6 +115,7 @@ const postVentas = async (req, res = response) => {
           await DetalleServicio.create({
             id_ventas: id_venta,
             id_servicio: servicio.id,
+            nombre: servicio.nombre,
             cantidad: servicio.cantidad,
             valor_venta: servicio.precioUnitario,
             valor_total: valor_total
