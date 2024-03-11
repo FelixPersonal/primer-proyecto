@@ -11,6 +11,16 @@ const getEmpleados = async (req, res = response) => {
     }
 }
 
+const getEmpleadosActivos = async (req, res = response) => {
+    try {
+        const empleados = await Empleado.findAll({ where: { estado: 'Activo' } });
+        res.json({ empleados });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Error al obtener los empleados' });
+    }
+}
+
 const getEmpleado = async (req, res = response) => {
     const id_empleado = req.params.id;
 
@@ -111,6 +121,7 @@ const cambiarEstadoEmpleado = async (req, res = response) => {
 module.exports = {
     getEmpleado,
     getEmpleados,
+    getEmpleadosActivos,
     postEmpleado,
     putEmpleado,
     cambiarEstadoEmpleado,

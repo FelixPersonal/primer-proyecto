@@ -1,21 +1,20 @@
 const { Router } = require('express');
-const router = Router();
-require('../controllers/insumos');
-
+const route = Router();
 const verificarToken = require('../middlewares/verificarToken');
-const {
-    getInsumo,
-    getInsumos,
-    postInsumo,
-    putInsumo,
-    deleteInsumo
+
+const { getInsumo, 
+    getInsumos, 
+    postInsumo, 
+    putInsumo, 
+    deleteInsumo 
 } = require('../controllers/insumos');
 
+route.use(verificarToken);
 
-router.get('/insumos', verificarToken, getInsumos);
-router.get('/insumos/:id',verificarToken, getInsumo);
-router.post('/insumos',verificarToken, postInsumo);
-router.put('/insumos/:id',verificarToken, putInsumo);
-router.delete('/insumos/:id',verificarToken, deleteInsumo);
+route.get('/insumo', verificarToken, getInsumos);
+route.get('/insumo/:id',verificarToken, getInsumo);
+route.post('/insumo', verificarToken, postInsumo);
+route.put('/insumo/:id', verificarToken, putInsumo);
+route.delete('/insumo/:id',verificarToken, deleteInsumo);
 
-module.exports = router;
+module.exports = route;

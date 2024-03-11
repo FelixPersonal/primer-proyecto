@@ -1,22 +1,25 @@
 const express = require('express');
-const cors = require('cors')
-const body_parser = require('body-parser')
+const cors = require('cors');
+const bodyParser = require('body-parser');
+
 const http = require('http');
 const socketIO = require('socket.io');
 const authController = require('../controllers/authController');
 const recuperarContrasena = require('../controllers/resetPassword');
 const solicitarRestablecimiento = require('../controllers/resetPassword');
-const editarPerfil = require('../controllers/usuarios')
+const editarPerfil = require('../controllers/usuarios');
 
 class Server {
   constructor() {
     this.app = express();
+    this.app.use(bodyParser.json());
+
     this.port = process.env.PORT || 8095;
     this.path = '/api';
     this.middlewares();
     this.routes();
-    this.createServer(); 
-    this.sockets(); 
+    this.createServer();
+    this.sockets();
   }
 
   createServer() {
@@ -24,23 +27,23 @@ class Server {
   }
 
   listen() {
-    this.app.listen(this.port, () => {
+    this.server.listen(this.port, () => {
       console.log(`Está escuchando por el puerto ${this.port}`);
     });
   }
 
   middlewares() {
-    // Configuración específica de CORS
     const corsOptions = {
-      origin: 'http://localhost:3001', // Reemplaza con la URL de tu frontend
+      origin: 'http://localhost:3001',
       credentials: true,
     };
 
     this.app.use(cors(corsOptions));
-
     this.app.use(express.static(__dirname + '/public'));
-    this.app.use(body_parser.json());
+    this.app.use(bodyParser.json());
   }
+
+
 
   routes() {
 
@@ -72,6 +75,7 @@ class Server {
     this.app.use(this.path, require('../routes/detalleComprasP'))
     this.app.use(this.path, require('../routes/detalleComprasIn'))
     this.app.use(this.path, require('../routes/citas_servicios'))
+    this.app.use(this.path, require('../routes/abonos'))
   }
 
   sockets() {
@@ -83,20 +87,26 @@ class Server {
       },
     });
 
-    // Manejo de eventos de Socket.IO aquí...
     this.io.on('connection', (socket) => {
-      console.log('Conectado FE');
+      console.log('Cliente conectado');
 
+      // Manejo de evento 'clienteConectado' enviado desde el cliente
+      socket.on('clienteConectado', (data) => {
+        console.log('Cliente conectado:', data);
+        // Envía una confirmación al cliente
+        socket.emit('confirmacionConexion', { message: 'Conexión establecida correctamente' });
+      });
+
+      // Manejo de evento 'mensaje' enviado desde el cliente
       socket.on('mensaje', (data) => {
         console.log('Mensaje recibido:', data);
         console.log('mensaje', '¡Hola felix Por fin!');
       });
 
+      // Envío de un mensaje al cliente cuando se conecta
       socket.emit('mensaje', '¡Hola felix Por fin!');
     });
   }
-
-};
+}
 
 module.exports = Server;
-

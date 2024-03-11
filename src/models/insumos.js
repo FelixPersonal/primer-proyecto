@@ -15,15 +15,18 @@ const Insumo = sequelize.define('Insumo', {
     stock: {
         type: DataTypes.INTEGER,
         allowNull: false,
+        defaultValue: 0,
     },
     precio: {
         type: DataTypes.DECIMAL(10, 2),
         allowNull: false,
+        defaultValue: 0,
     },
     estado: {
         type: DataTypes.BOOLEAN,
         defaultValue: true,
     },
+
 });
 
-module.exports = Insumo;
+module.exports = Insumo;

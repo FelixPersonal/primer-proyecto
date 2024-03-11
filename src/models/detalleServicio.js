@@ -24,6 +24,10 @@ const DetalleServicio = sequelize.define('detalleservicio', {
             key: 'id_ventas'
         }
     },
+    nombre: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
     cantidad: {
         type: DataTypes.INTEGER,
         allowNull: false

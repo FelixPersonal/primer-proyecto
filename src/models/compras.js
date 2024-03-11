@@ -13,14 +13,38 @@ const Compras = sequelize.define(
     id_proveedor: {
       type: DataTypes.INTEGER,
       allowNull: false,
+      validate: {
+        notNull: {
+          msg: "El ID del proveedor es requerido",
+        },
+        isInt: {
+          msg: "El ID del proveedor debe ser un número entero",
+        },
+      },
     },
     no_factura: {
       type: DataTypes.STRING,
       allowNull: false,
+      validate: {
+        notNull: {
+          msg: "El número de factura es requerido",
+        },
+        notEmpty: {
+          msg: "El número de factura no puede estar vacío",
+        },
+      },
     },
     tipoCompra: {
       type: DataTypes.STRING,
       allowNull: false,
+      validate: {
+        notNull: {
+          msg: "El tipo de compra es requerido",
+        },
+        notEmpty: {
+          msg: "El tipo de compra no puede estar vacío",
+        },
+      },
     },
     estado: {
       type: DataTypes.STRING,

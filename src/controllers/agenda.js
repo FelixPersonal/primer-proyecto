@@ -12,6 +12,16 @@ const getAgendas = async (req, res = response) => {
     }
 };
 
+const getAgendasActivas = async (req, res = response) => {
+    try {
+        const agendas = await Agenda.findAll({where: { estado: true}});
+        res.json({ agendas });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Error al obtener elementos de Agenda' });
+    }
+};
+
 const getAgendaEmpleado = async (req, res = response) => {
     const { id } = req.params;
 
@@ -21,6 +31,9 @@ const getAgendaEmpleado = async (req, res = response) => {
             include: [{
                 model: Empleado, // Modelo de empleado
                 attributes: ['id_empleado', 'nombre', 'apellido', 'correo', 'documento', 'telefono', 'estado'], // Selecciona los campos que deseas obtener
+                where: {
+                    estado: 'Activo' // Filtra solo los empleados con estado 'Activo'
+                }
             }],
         });
 
@@ -34,7 +47,6 @@ const getAgendaEmpleado = async (req, res = response) => {
         res.status(500).json({ error: 'Error al obtener el elemento de Agenda con datos de empleado' });
     }
 };
-
 
 const getAgenda = async (req, res = response) => {
     const { id } = req.params;
@@ -70,7 +82,7 @@ const putAgenda = async (req, res = response) => {
         }
     } catch (error) {
         console.error(error);
-        res.status(500).json({ error: 'Error al actualizar el elemento de Agenda' });
+        res.status(500).json({ error: 'Error al actualizar el elemento de Agenda el empleado ya se encuentra en horas que se solapan' });
     }
 };
 
@@ -151,6 +163,7 @@ const disableEvent = async (req, res) => {
 };
 
 module.exports = {
+    getAgendasActivas,
     disableEvent,
     getAgenda,
     getAgendas,

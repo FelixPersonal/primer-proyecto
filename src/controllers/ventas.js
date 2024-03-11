@@ -1,4 +1,4 @@
-const Venta = require('../models/ventas');
+const Venta = require ('../models/ventas');
 const DetalleProducto = require('../models/detalleProducto');
 const DetalleServicio = require('../models/detalleServicio');
 const Producto = require('../models/productos')
@@ -18,25 +18,27 @@ const getVentas = async (req, res = response) => {
     console.error(error);
     res.status(500).json({ error: 'Error al obtener elementos de Venta' });
   }
-}
+};
 
 
 const getVenta = async (req, res = response) => {
-  const { id } = req.params;
+
+  const id_ventas = req.params.id;
 
   try {
-    const venta = await Venta.findByPk(id);
 
-    if (venta) {
-      res.json(venta);
+    const ventas = await Venta.findByPk(id_ventas);
+
+    if (ventas) {
+      res.json(ventas);
     } else {
-      res.status(404).json({ error: `No se encontró un elemento de Venta con ID ${id}` });
+      res.status(404).json({ error: `No se encontró ninguna venta con el documento: ${id_ventas}` });
     }
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Error al obtener el elemento de Venta' });
+    console.error(error); 
+    res.status(500).json({ error: 'Error al obtener la venta' });
   }
-}
+};
 
 
 
@@ -77,15 +79,16 @@ const postVentas = async (req, res = response) => {
     console.log(servicios)
     // Agregar detalles de productos
     if (productos.length > 0) {
-      console.log('Entramos al detalle de productos')
+      console.log('Entramos al detalle de productos', productos)
       for (let producto of productos) {
-        var valor_total = producto.cantidad * producto.precioTotal;
+        var valor_total = producto.cantidad * producto.precioUnitario;
         try {
           let detalle_prod = await DetalleProducto.create({
             id_ventas: id_venta,
             id_producto: producto.id,
+            nombre: producto.nombre,
             cantidad: producto.cantidad,
-            valor_venta: producto.precioTotal,
+            valor_venta: producto.precioUnitario,
             valor_total: valor_total
           });
           console.log('producto registrado')
@@ -105,15 +108,16 @@ const postVentas = async (req, res = response) => {
     }
 
     if (servicios.length > 0) {
-      console.log('Entramos al detalle de servicios')
+      console.log('Entramos al detalle de servicios', servicios)
       for (let servicio of servicios) {
-        var valor_total = servicio.cantidad * servicio.precioTotal;
+        var valor_total = servicio.cantidad * servicio.precioUnitario;
         try {
           await DetalleServicio.create({
             id_ventas: id_venta,
             id_servicio: servicio.id,
+            nombre: servicio.nombre,
             cantidad: servicio.cantidad,
-            valor_venta: servicio.precioTotal,
+            valor_venta: servicio.precioUnitario,
             valor_total: valor_total
           });
           console.log('servicio registrado')
@@ -157,11 +161,11 @@ const postVentas = async (req, res = response) => {
 function calculateTotalPrice(productos, servicios) {
   let totalPrice = 0;
   for (const producto of productos) {
-    const precioFloat = parseFloat(producto.precioTotal);
+    const precioFloat = parseFloat(producto.precioUnitario);
     totalPrice += producto.cantidad * precioFloat;
   }
   for (const servicio of servicios) {
-    const precioFloat = parseFloat(servicio.precioTotal);
+    const precioFloat = parseFloat(servicio.precioUnitario);
     totalPrice += servicio.cantidad * precioFloat;
   }
   return totalPrice;
@@ -212,6 +216,7 @@ const cambiarEstado = async (req, res = response) => {
 
 module.exports = {
   getVentas,
+  getVenta,
   postVentas,
   cancelarVenta,
   cambiarEstado
