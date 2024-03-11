@@ -11,7 +11,7 @@ route.post('/rol', postRol);
 route.put('/rol/:id', putRol);
 route.delete('/rol/:id', deleteRol);
 
-route.post('/rol/:id/cambiar-estado', cambiarEstadoRol); 
+//route.post('/rol/:id/cambiar-estado', cambiarEstadoRol); 
 // Ruta para asignar permisos a un rol
 //route.post('/asignar-permisos', asignarPermisoRol);
 route.post('/rol/:id_rol/permisos', asignarPermisoRol);
