@@ -82,7 +82,7 @@ class Server {
     this.io = socketIO(this.server, {
       cors: {
         origin: 'http://localhost:3001',
-        methods: ['GET', 'POST'],
+        methods: ['GET', 'POST', 'PUT', 'DELETE'],
         credentials: true,
       },
     });
@@ -103,10 +103,18 @@ class Server {
         console.log('mensaje', '¡Hola felix Por fin!');
       });
 
+      // Manejo de evento 'eventoActualizado' enviado desde el cliente
+      socket.on('eventoActualizado', (eventId) => {
+        console.log('Evento actualizado:', eventId);
+        // Aquí puedes realizar acciones adicionales, como notificar a otros usuarios o actualizar datos en tiempo real
+        this.io.emit('eventoActualizado', eventId); // Emitir un mensaje a todos los clientes conectados
+      });
+
       // Envío de un mensaje al cliente cuando se conecta
       socket.emit('mensaje', '¡Hola felix Por fin!');
     });
   }
+
 }
 
 module.exports = Server;
