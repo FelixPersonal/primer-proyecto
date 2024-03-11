@@ -82,7 +82,7 @@ const putAgenda = async (req, res = response) => {
         }
     } catch (error) {
         console.error(error);
-        res.status(500).json({ error: 'Error al actualizar el elemento de Agenda' });
+        res.status(500).json({ error: 'Error al actualizar el elemento de Agenda el empleado ya se encuentra en horas que se solapan' });
     }
 };
 
