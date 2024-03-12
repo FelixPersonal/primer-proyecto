@@ -45,6 +45,7 @@ const getVenta = async (req, res = response) => {
 const postVentas = async (req, res = response) => {
   // Obtener datos de la solicitud
   const { nueva_venta } = req.body;
+  const { estado } = nueva_venta; // Obtener el estado de la venta desde nueva_venta
   try {
     const cliente = await Clientes.findByPk(nueva_venta.clienteId);
     if (!cliente) {
@@ -67,7 +68,7 @@ const postVentas = async (req, res = response) => {
       id_empleado: nueva_venta.empleadoId,
       numeroFactura: nueva_venta.numeroFactura,
       precio: precio,
-      estado: 'Pendiente',
+      estado: estado,
       estado_anulado: 'Activo',
       nombre: cliente.nombre,
       apellido: cliente.apellido,
