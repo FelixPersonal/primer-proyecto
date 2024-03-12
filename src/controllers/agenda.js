@@ -96,10 +96,18 @@ const postAgenda = async (req, res = response) => {
         res.status(201).json({ success: true, message: 'Agenda guardada exitosamente', agenda: createdAgendaItem });
     } catch (error) {
         console.error(error);
-        // Enviar una respuesta con un campo indicando el error
-        res.status(400).json({ success: false, error: 'Error al crear un elemento de Agenda' });
+
+        // Manejar el error de validación de Sequelize
+        if (error.name === 'SequelizeValidationError') {
+            // Si el error es de validación de Sequelize, es probable que sea debido a la superposición de horarios
+            res.status(400).json({ success: false, error: 'Ya existe un evento que se superpone en fechas y horas para este empleado.' });
+        } else {
+            // Si el error no es de validación de Sequelize, devolver un mensaje de error genérico
+            res.status(400).json({ success: false, error: 'Error al crear un elemento de Agenda' });
+        }
     }
 };
+
 
 
 
