@@ -17,7 +17,7 @@ const getCitas = async (req, res = response) => {
 
 const getCitasServcios = async (req, res = response) => {
   try {
-    const { id_usuario } = req.params; // Suponiendo que el id_usuario se pasa como parámetro en la solicitud
+    const id_usuario  = req.params.id; // Suponiendo que el id_usuario se pasa como parámetro en la solicitud
 
     // Obtener todas las citas para el id_usuario proporcionado
     const citas = await Citas.findAll({
