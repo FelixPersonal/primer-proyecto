@@ -17,8 +17,10 @@ const getCitas = async (req, res = response) => {
 
 const getCitasServcios = async (req, res = response) => {
   try {
+    const { id_usuario } = req.params;
+
     // Obtener todas las compras
-    const citas = await Citas.findAll();
+    const citas = await Citas.findByPk(id_usuario);
 
     // Verificar si hay compras
     if (!citas || citas.length === 0) {
