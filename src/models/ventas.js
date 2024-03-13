@@ -45,7 +45,7 @@ const Venta = sequelize.define('ventas', {
   },
 
   precio: {
-    type: DataTypes.DECIMAL(10, 2),
+    type: DataTypes.DOUBLE,
   },
 
   nombre: {
