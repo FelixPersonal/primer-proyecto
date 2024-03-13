@@ -52,6 +52,10 @@ const Venta = sequelize.define('ventas', {
     type: DataTypes.STRING,
   },
 
+  nombre_usuario: {
+    type: DataTypes.STRING,
+  },
+
   apellido: {
     type: DataTypes.STRING,
   },
