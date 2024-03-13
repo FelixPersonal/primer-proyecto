@@ -66,7 +66,7 @@ const Venta = sequelize.define('ventas', {
 
   estado: {
     type: DataTypes.STRING,
-    type: DataTypes.ENUM('Pendiente', 'Cancelado'),
+    type: DataTypes.ENUM('Pendiente', 'Pagado'),
     defaultValue: 'Pendiente',
     validate: {
       is: /^[A-Za-z\s]+$/,
