@@ -13,6 +13,17 @@ const getProductos = async (req, res = response) => {
     }
 }
 
+
+const getProductosActivos = async (req, res = response) => {
+    try {
+        const productos = await Producto.findAll({where: { estado: true}});
+        res.json({ productos });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Error al obtener elementos de productos' });
+    }
+};
+
 const getProducto = async (req, res = response) => {
     const { id } = req.params;
 
@@ -97,6 +108,7 @@ const obtenerProveedores = async (req, res = response) => {
 
 module.exports = {
     obtenerProveedores,
+    getProductosActivos,
     getProducto,
     getProductos,
     postProducto,
