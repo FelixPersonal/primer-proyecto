@@ -17,18 +17,21 @@ const getCitas = async (req, res = response) => {
 
 const getCitasServcios = async (req, res = response) => {
   try {
-    const { id_usuario } = req.params;
+    const { id_usuario } = req.params; // Suponiendo que el id_usuario se pasa como parámetro en la solicitud
 
-    // Obtener todas las compras
-    const citas = await Citas.findByPk(id_usuario);
+    // Obtener todas las citas para el id_usuario proporcionado
+    const citas = await Citas.findAll({
+      where: { id_usuario: id_usuario },
+    });
 
-    // Verificar si hay compras
+    // Verificar si hay citas para el id_usuario
     if (!citas || citas.length === 0) {
-      return res.status(404).json({ error: 'No se encontraron citas' });
+      return res.status(404).json({ error: 'No se encontraron citas para el usuario proporcionado' });
     }
 
     const citasServicios = [];
 
+    // Iterar sobre cada cita para obtener los servicios asociados
     for (const cita of citas) {
       const citaServicio = await Citas_Servicios.findAll({
         where: { id_cita: cita.id_cita },
@@ -46,7 +49,6 @@ const getCitasServcios = async (req, res = response) => {
     res.status(500).json({ error: 'Error al obtener las citas y sus servicios' });
   }
 }
-
   
 const getCitasHoy = async (req, res = response) => {
   const { cedula_cliente } = req.body;
