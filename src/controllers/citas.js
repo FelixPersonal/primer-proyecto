@@ -1,8 +1,6 @@
 const Citas = require('../models/citas');
 const Clientes = require('../models/clientes');
 const { response } = require('express');
-const moment = require('moment');
-const { Op } = require('sequelize');
 const Citas_Servicios = require('../models/citas_servicios');
 
 const getCitas = async (req, res = response) => {
@@ -13,6 +11,19 @@ const getCitas = async (req, res = response) => {
     console.error(error);
     res.status(500).json({ error: 'Error al obtener la lista de citas' });
   }
+}
+
+const getCitasAgendadas = async (req, res = response) => {
+  try {
+    const listCitas = await Citas.findAll({
+      where: { estado: 'Agendada' },
+    });
+    res.json({ listCitas });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error al obtener la lista de citas' });
+  }
+
 }
 
 const getCitasServcios = async (req, res = response) => {
@@ -161,6 +172,7 @@ const deleteCita = async (req, res = response) => {
 module.exports = {
   getCita,
   getCitas,
+  getCitasAgendadas,
   getCitasServcios,
   getCitasHoy,
   postCita,
