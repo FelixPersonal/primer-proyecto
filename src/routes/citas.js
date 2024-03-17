@@ -2,8 +2,6 @@ const { Router } = require('express');
 const route = Router();
 const verificarToken = require('../middlewares/verificarToken');
 
-
-
 const { getCita, getCitas, getCitasServcios, getCitasHoy, postCita, putCitaEstado, putCita, deleteCita, getCitasAgendadas } = require('../controllers/citas');
 
 route.get('/citas',verificarToken, getCitas);
