@@ -1,8 +1,6 @@
 const Citas = require('../models/citas');
 const Clientes = require('../models/clientes');
 const { response } = require('express');
-const moment = require('moment');
-const { Op } = require('sequelize');
 const Citas_Servicios = require('../models/citas_servicios');
 const Usuario = require('../models/usuarios');
 
@@ -16,22 +14,36 @@ const getCitas = async (req, res = response) => {
   }
 }
 
+const getCitasAgendadas = async (req, res = response) => {
+  try {
+    const listCitas = await Citas.findAll({
+      where: { estado: 'Agendada' },
+    });
+    res.json({ listCitas });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error al obtener la lista de citas' });
+  }
+
+}
+
 const getCitasServcios = async (req, res = response) => {
   try {
-    const { id_usuario } = req.params;
+    const id_usuario  = req.params.id; // Suponiendo que el id_usuario se pasa como parámetro en la solicitud
 
-    // Obtener todas las compras
+    // Obtener todas las citas para el id_usuario proporcionado
     const citas = await Citas.findAll({
       where: { id_usuario: id_usuario },
     });
 
-    // Verificar si hay compras
+    // Verificar si hay citas para el id_usuario
     if (!citas || citas.length === 0) {
-      return res.status(404).json({ error: 'No se encontraron citas' });
+      return res.status(404).json({ error: 'No se encontraron citas para el usuario proporcionado' });
     }
 
     const citasServicios = [];
 
+    // Iterar sobre cada cita para obtener los servicios asociados
     for (const cita of citas) {
       const citaServicio = await Citas_Servicios.findAll({
         where: { id_cita: cita.id_cita },
@@ -49,7 +61,6 @@ const getCitasServcios = async (req, res = response) => {
     res.status(500).json({ error: 'Error al obtener las citas y sus servicios' });
   }
 }
-
   
 const getCitasHoy = async (req, res = response) => {
   const { id_usuario } = req.body;
@@ -162,6 +173,7 @@ const deleteCita = async (req, res = response) => {
 module.exports = {
   getCita,
   getCitas,
+  getCitasAgendadas,
   getCitasServcios,
   getCitasHoy,
   postCita,
