@@ -8,6 +8,8 @@ const authController = require('../controllers/authController');
 const recuperarContrasena = require('../controllers/resetPassword');
 const solicitarRestablecimiento = require('../controllers/resetPassword');
 const editarPerfil = require('../controllers/usuarios');
+const Rol = require('../models/roles');
+const Usuario = require('../models/usuarios');
 
 class Server {
   constructor() {
@@ -20,6 +22,7 @@ class Server {
     this.routes();
     this.createServer();
     this.sockets();
+    this.inicializarBaseDeDatos();
   }
 
   createServer() {
@@ -41,6 +44,37 @@ class Server {
     this.app.use(cors(corsOptions));
     this.app.use(express.static(__dirname + '/public'));
     this.app.use(bodyParser.json());
+  }
+
+  async inicializarBaseDeDatos() {
+    try {
+      // Verificar si existen roles en la base de datos
+      const cantidadRoles = await Rol.count();
+      const cantidadUsuarios = await Usuario.count();
+      
+      // Si no hay ningún rol, crea uno automáticamente
+      if (cantidadRoles === 0) {
+        await Rol.create({
+          nombre: 'SuperAdmin',
+          estado: 'Activo',
+        });
+        console.log('Se ha creado el rol por defecto.');
+      }
+
+      if (cantidadUsuarios === 0) {
+        await Usuario.create({
+          id_rol: 1,
+          nombre_usuario: 'admin',
+          contrasena: '12345678S',
+          correo: 'adminbac@gmail.com',
+          estado: 'Activo',
+        });
+        console.log('Se ha creado el usuario por defecto.');
+      }
+
+    } catch (error) {
+      console.error('Error al inicializar la base de datos:', error);
+    }
   }
 
 
