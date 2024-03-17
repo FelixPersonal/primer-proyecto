@@ -9,7 +9,7 @@ const { getCita, getCitas, getCitasServcios, getCitasHoy, postCita, putCitaEstad
 route.get('/citas',verificarToken, getCitas);
 route.get('/citas/servicios',verificarToken, getCitasServcios);
 route.get('/citas/:id',verificarToken, getCita);
-route.post('/citashoy',verificarToken, getCitasHoy)
+route.post('/citashoy',verificarToken, getCitasHoy);
 route.post('/citas',verificarToken, postCita);
 route.put('/citas/:id/cambiarEstado',verificarToken, putCitaEstado);
 route.put('/citas/:id',verificarToken, putCita);
