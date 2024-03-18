@@ -129,6 +129,25 @@ const putEmpleado = async (req, res = response) => {
     }
 }
 
+
+const deleteEmpleado = async (req, res = response) => {
+    const { id } = req.params;
+
+    try {
+        const empleado = await Empleado.findByPk(id);
+
+        if (empleado) {
+            await empleado.destroy();
+            res.json('El empleado fue eliminado exitosamente');
+        } else {
+            res.status(404).json({ error: `No se encontró el empleado con ID ${id}` });
+        }
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Error al eliminar el empleado' });
+    }
+};
+
 const cambiarEstadoEmpleado = async (req, res = response) => {
     const id_empleado = req.params.id;
 
@@ -148,10 +167,14 @@ const cambiarEstadoEmpleado = async (req, res = response) => {
         console.error(error);
         res.status(500).json({ error: 'Error al actualizar el estado del empleado' });
     }
+
+
+
 };
 
 module.exports = {
     getEmpleado,
+    deleteEmpleado,
     getEmpleados,
     getEmpleadoAgendas,
     getEmpleadosActivos,
