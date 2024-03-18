@@ -16,6 +16,13 @@ const Servicios = sequelize.define('servicios', {
         type: DataTypes.DOUBLE,
         allowNull: false,
     },
+    tiempo: {
+        type: DataTypes.INTEGER, 
+        allowNull: false,
+        validate: {
+            min: 1, 
+        },
+    },
     estado: {
         type: DataTypes.BOOLEAN,
         defaultValue: true,
