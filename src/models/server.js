@@ -64,16 +64,17 @@ class Server {
       }
 
       const permisos = [
+        { nombre_permiso: 'Dashboard', ruta: '/dashboard' },
         { nombre_permiso: 'Agenda', ruta: '/agendas/crearconfiguracion' },
         { nombre_permiso: 'Ventas', ruta: '/ventas' },
         { nombre_permiso: 'Proveedores', ruta: '/proveedores' },
         { nombre_permiso: 'Productos', ruta: '/productos' },
-        { nombre_permiso: 'Clientes', ruta: '/clientes' },
+        { nombre_permiso: 'Clientes', ruta: '/clientes/listaclientes' },
         { nombre_permiso: 'Servicios', ruta: '/servicios' },
         { nombre_permiso: 'Empleados', ruta: '/empleados' },
         { nombre_permiso: 'Compras', ruta: '/compras' },
-        { nombre_permiso: 'Roles', ruta: '/roles' },
-        { nombre_permiso: 'Usuarios', ruta: '/usuarios' },
+        { nombre_permiso: 'Roles', ruta: '/listarol' },
+        { nombre_permiso: 'Usuarios', ruta: '/listausuarios' },
       ];
 
       if (cantidadPermisos === 0) {
