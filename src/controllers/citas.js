@@ -64,6 +64,7 @@ const getCitasServcios = async (req, res = response) => {
   
 const getCitasHoy = async (req, res = response) => {
   const { id_usuario } = req.body;
+  console.log(id_usuario)
   try {
     const usuario = await Usuario.findOne({
       where: { id_usuario: id_usuario }
