@@ -50,6 +50,12 @@ const putRol = async (req, res = response) => {
       return res.status(404).json({ error: `No se encontró un rol con ID ${id}` });
     }
 
+    // Validamos que el nuevo nombre no esté en uso por otro rol
+    const rolWithSameName = await Rol.findOne({ where: { nombre } });
+    if (rolWithSameName && rolWithSameName.id !== Number(id)) {
+      return res.status(400).json({ error: 'El nombre del rol ya está en uso. Por favor, ingresa otro nombre.' });
+    }
+
     // Actualizamos el nombre y el estado del rol
     await rol.update({ nombre, estado });
 
@@ -86,8 +92,6 @@ const putRol = async (req, res = response) => {
     res.status(500).json({ error: 'Error al actualizar el rol' });
   }
 }
-
-
 /*
 
 const postRol = async (req, res = response) => {
@@ -111,47 +115,71 @@ const postRol = async (req, res = response) => {
 */
 
 const postRol = async (req, res = response) => {
-    const { nombre, estado, permisos } = req.body;
-  
-    try {
-      // Crea el rol
-      const nuevoRol = await Rol.create({ nombre, estado });
-  
-      // Verifica si se proporcionaron permisos y son válidos
-      if (permisos && permisos.length > 0) {
-        const permisosValidos = await Permiso.findAll({ where: { id_permiso: permisos } });
-        
-        if (permisosValidos.length !== permisos.length) {
-          return res.status(400).json({ error: "Uno o más permisos proporcionados son inválidos" });
-        }
-  
-        // Asigna permisos al rol
-        await nuevoRol.setPermisos(permisos);
-      }
-  
-      res.json(nuevoRol);
-    } catch (error) {
-      console.error("Error al crear el rol:", error);
-      res.status(500).json({ error: "Error interno del servidor" });
+  const { nombre, estado, permisos } = req.body;
+
+  try {
+    // Verifica si ya existe un rol con el mismo nombre
+    const rolExistente = await Rol.findOne({ where: { nombre } });
+    if (rolExistente) {
+      return res.status(400).json({ error: 'El nombre del rol ya está en uso. Por favor, ingresa otro nombre.' });
     }
+
+    // Crea el rol
+    const nuevoRol = await Rol.create({ nombre, estado });
+
+    // Verifica si se proporcionaron permisos y son válidos
+    if (permisos && permisos.length > 0) {
+      const permisosValidos = await Permiso.findAll({ where: { id_permiso: permisos } });
+
+      if (permisosValidos.length !== permisos.length) {
+        return res.status(400).json({ error: 'Uno o más permisos proporcionados son inválidos' });
+      }
+
+      // Asigna permisos al rol
+      await nuevoRol.setPermisos(permisos);
+    }
+
+    res.json(nuevoRol);
+  } catch (error) {
+    console.error('Error al crear el rol:', error);
+    res.status(500).json({ error: 'Error interno del servidor' });
+  }
 };
 
 
 const deleteRol = async (req, res = response) => {
-    const { id } = req.params;
-    try {
-        const rol = await Rol.findByPk(id);
-        if (rol) {
-            await rol.destroy();
-            res.json('El rol fue eliminado exitosamente');
-        } else {
-            res.status(404).json({ error: `No se encontró un rol con ID ${id}` });
-        }
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: 'Error al eliminar el rol' });
-    }
+  const { id } = req.params;
+  const rolesEspeciales = {
+      11: 'Cliente',
+      14: 'Administrador',
+      15: 'Empleado'
+  };
+
+  if (id in rolesEspeciales) {
+      return res.status(400).json({ error: `No se puede eliminar el rol de ${rolesEspeciales[id]}.` });
+  }
+
+  try {
+      const rol = await Rol.findByPk(id);
+      if (!rol) {
+          return res.status(404).json({ error: `No se encontró un rol con ID ${id}` });
+      }
+
+      await rol.destroy();
+      res.json('El rol fue eliminado exitosamente');
+  } catch (error) {
+      if (error.name === 'SequelizeForeignKeyConstraintError') {
+          return res.status(400).json({ error: 'Este rol tiene un usuario asociado.' });
+      }
+
+      console.error(error);
+      res.status(500).json({ error: 'Error al eliminar el rol' });
+  }
 }
+
+
+
+
 
 const asignarPermisoRol = async (req, res = response) => {
     const { id_rol, id_permisos } = req.body;
