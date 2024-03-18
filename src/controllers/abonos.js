@@ -53,7 +53,7 @@ const postAbonos = async (req, res = response) => {
         await venta.update({ precio_pendiente: nuevo_precio_pendiente });
 
         if (nuevo_precio_pendiente <= 0) {
-            await venta.update({ estado: 'Cancelado' });
+            await venta.update({ estado: 'Pagado' });
         }
 
         const abono = await Abonos.create({
