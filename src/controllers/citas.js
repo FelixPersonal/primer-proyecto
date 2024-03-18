@@ -1,9 +1,8 @@
 const Citas = require('../models/citas');
 const Clientes = require('../models/clientes');
 const { response } = require('express');
-const moment = require('moment');
-const { Op } = require('sequelize');
 const Citas_Servicios = require('../models/citas_servicios');
+const Usuario = require('../models/usuarios');
 
 const getCitas = async (req, res = response) => {
   try {
@@ -15,18 +14,36 @@ const getCitas = async (req, res = response) => {
   }
 }
 
+const getCitasAgendadas = async (req, res = response) => {
+  try {
+    const listCitas = await Citas.findAll({
+      where: { estado: 'Agendada' },
+    });
+    res.json({ listCitas });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error al obtener la lista de citas' });
+  }
+
+}
+
 const getCitasServcios = async (req, res = response) => {
   try {
-    // Obtener todas las compras
-    const citas = await Citas.findAll();
+    const id_usuario  = req.params.id; // Suponiendo que el id_usuario se pasa como parámetro en la solicitud
 
-    // Verificar si hay compras
+    // Obtener todas las citas para el id_usuario proporcionado
+    const citas = await Citas.findAll({
+      where: { id_usuario: id_usuario },
+    });
+
+    // Verificar si hay citas para el id_usuario
     if (!citas || citas.length === 0) {
-      return res.status(404).json({ error: 'No se encontraron citas' });
+      return res.status(404).json({ error: 'No se encontraron citas para el usuario proporcionado' });
     }
 
     const citasServicios = [];
 
+    // Iterar sobre cada cita para obtener los servicios asociados
     for (const cita of citas) {
       const citaServicio = await Citas_Servicios.findAll({
         where: { id_cita: cita.id_cita },
@@ -44,20 +61,19 @@ const getCitasServcios = async (req, res = response) => {
     res.status(500).json({ error: 'Error al obtener las citas y sus servicios' });
   }
 }
-
   
 const getCitasHoy = async (req, res = response) => {
-  const { cedula_cliente } = req.body;
+  const { id_usuario } = req.body;
   try {
-    const cliente = await Clientes.findOne({
-      where: { documento: cedula_cliente }
+    const usuario = await Usuario.findOne({
+      where: { id_usuario: id_usuario }
     });
-    if (!cliente) {
+    if (!usuario) {
       return res.status(404).json({ error: 'Cliente no encontrado' });
     }
 
     const ultimaCita = await Citas.findOne({
-      where: { id_cliente: cliente.id_cliente },
+      where: { id_usuario: usuario.id_usuario },
       order: [['Fecha_Atencion', 'DESC']], 
     });
 
@@ -157,6 +173,7 @@ const deleteCita = async (req, res = response) => {
 module.exports = {
   getCita,
   getCitas,
+  getCitasAgendadas,
   getCitasServcios,
   getCitasHoy,
   postCita,

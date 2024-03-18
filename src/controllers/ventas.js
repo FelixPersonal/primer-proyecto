@@ -7,6 +7,7 @@ const Citas = require('../models/citas')
 const { response } = require('express');
 const Clientes = require('../models/clientes');
 const Empleado = require('../models/empleados');
+const Usuario = require('../models/usuarios');
 
 const getVentas = async (req, res = response) => {
   try {
@@ -45,6 +46,7 @@ const getVenta = async (req, res = response) => {
 const postVentas = async (req, res = response) => {
   // Obtener datos de la solicitud
   const { nueva_venta } = req.body;
+  const { estado } = nueva_venta; // Obtener el estado de la venta desde nueva_venta
   try {
     const cliente = await Clientes.findByPk(nueva_venta.clienteId);
     if (!cliente) {
@@ -65,9 +67,10 @@ const postVentas = async (req, res = response) => {
       id_cita: nueva_venta.citaId,
       id_cliente: nueva_venta.clienteId,
       id_empleado: nueva_venta.empleadoId,
+      id_usuario: nueva_venta.usuarioId,
       numeroFactura: nueva_venta.numeroFactura,
       precio: precio,
-      estado: 'Pendiente',
+      estado: estado,
       estado_anulado: 'Activo',
       nombre: cliente.nombre,
       apellido: cliente.apellido,
@@ -180,10 +183,10 @@ const cancelarVenta = async (req, res = response) => {
     if (!venta) {
       return res.status(404).json({ error: 'Venta no encontrada' });
     }
-    if (venta.estado === 'Cancelado') {
+    if (venta.estado === 'Pagado') {
       return res.status(400).json({ error: 'La venta ya está cancelada' });
     }
-    venta.estado = 'Cancelado';
+    venta.estado = 'Pagado';
     await venta.save();
 
     return res.json({ message: 'Venta cancelada exitosamente' });

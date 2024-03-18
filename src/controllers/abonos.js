@@ -12,6 +12,25 @@ const getAbonos = async (req, res = response) => {
     }
 };
 
+const getAbono = async (req, res = response) => {
+
+    const id_abonos = req.params.id;
+
+    try {
+
+        const abonos = await Abonos.findByPk(id_abonos);
+
+        if (abonos) {
+            res.json(abonos);
+        } else {
+            res.status(404).json({ error: `No se encontró ningún abono con este id: ${id_abonos}` });
+        }
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({error: 'Error al obtener el abono.'})
+    }
+};
+
 
 const postAbonos = async (req, res = response) => {
 
@@ -34,7 +53,7 @@ const postAbonos = async (req, res = response) => {
         await venta.update({ precio_pendiente: nuevo_precio_pendiente });
 
         if (nuevo_precio_pendiente <= 0) {
-            await venta.update({ estado: 'Cancelado' });
+            await venta.update({ estado: 'Pagado' });
         }
 
         const abono = await Abonos.create({
@@ -56,5 +75,6 @@ const postAbonos = async (req, res = response) => {
 
 module.exports = {
     getAbonos,
-    postAbonos
+    postAbonos,
+    getAbono
 };

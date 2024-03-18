@@ -8,6 +8,9 @@ const authController = require('../controllers/authController');
 const recuperarContrasena = require('../controllers/resetPassword');
 const solicitarRestablecimiento = require('../controllers/resetPassword');
 const editarPerfil = require('../controllers/usuarios');
+const Rol = require('../models/roles');
+const Usuario = require('../models/usuarios');
+const Permiso = require('./permisos');
 
 class Server {
   constructor() {
@@ -20,6 +23,7 @@ class Server {
     this.routes();
     this.createServer();
     this.sockets();
+    this.inicializarBaseDeDatos();
   }
 
   createServer() {
@@ -41,6 +45,70 @@ class Server {
     this.app.use(cors(corsOptions));
     this.app.use(express.static(__dirname + '/public'));
     this.app.use(bodyParser.json());
+  }
+
+  async inicializarBaseDeDatos() {
+    try {
+      // Verificar si existen roles en la base de datos
+      const cantidadRoles = await Rol.count();
+      const cantidadUsuarios = await Usuario.count();
+      const cantidadPermisos = await Permiso.count();
+      
+      // Si no hay ningún rol, crea uno automáticamente
+      if (cantidadRoles === 0) {
+        await Rol.create({
+          nombre: 'SuperAdmin',
+          estado: 'Activo',
+        });
+        console.log('Se ha creado el rol por defecto.');
+      }
+
+      const permisos = [
+        { nombre_permiso: 'Dashboard', ruta: '/dashboard' },
+        { nombre_permiso: 'Agenda', ruta: '/agendas/crearconfiguracion' },
+        { nombre_permiso: 'Ventas', ruta: '/ventas' },
+        { nombre_permiso: 'Proveedores', ruta: '/proveedores' },
+        { nombre_permiso: 'Productos', ruta: '/productos' },
+        { nombre_permiso: 'Clientes', ruta: '/clientes/listaclientes' },
+        { nombre_permiso: 'Servicios', ruta: '/servicios' },
+        { nombre_permiso: 'Empleados', ruta: '/empleados' },
+        { nombre_permiso: 'Compras', ruta: '/compras' },
+        { nombre_permiso: 'Roles', ruta: '/listarol' },
+        { nombre_permiso: 'Usuarios', ruta: '/listausuarios' },
+      ];
+
+      if (cantidadPermisos === 0) {
+        try {
+          for (const permiso of permisos) {
+            await Permiso.create({
+              nombre_permiso: permiso.nombre_permiso,
+              ruta: permiso.ruta,
+            });
+            console.log(`Se ha creado el permiso: ${permiso.nombre_permiso}`);
+          }
+          console.log('Se han creado los permisos por defecto.');
+        } catch (error) {
+          console.error('Error al crear permisos:', error);
+        }
+      } else {
+        console.log('Ya existen permisos en la base de datos.');
+      }
+
+      if (cantidadUsuarios === 0) {
+        await Usuario.create({
+          id_rol: 1,
+          nombre_usuario: 'admin',
+          contrasena: '12345678S',
+          correo: 'adminbac@gmail.com',
+          estado: 'Activo',
+        });
+
+        console.log('Se ha creado el usuario por defecto.');
+      }
+
+    } catch (error) {
+      console.error('Error al inicializar la base de datos:', error);
+    }
   }
 
 

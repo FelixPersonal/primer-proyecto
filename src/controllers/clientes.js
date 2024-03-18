@@ -1,6 +1,16 @@
 const { response } = require('express');
 const Cliente = require('../models/clientes');
 
+const getClientesActivos = async (req, res = response) => {
+    try {
+        const clientes = await Cliente.findAll({where: { estado: true}});
+        res.json({ clientes });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Error al obtener elementos de clientes' });
+    }
+};
+
 const getClientes = async (req, res = response) => {
     try {
         const listClientes = await Cliente.findAll();
@@ -94,6 +104,7 @@ const deleteCliente = async (req, res = response) => {
 
 module.exports = {
     getCliente,
+    getClientesActivos,
     getClientes,
     postCliente,
     putCliente,
