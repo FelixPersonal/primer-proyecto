@@ -38,6 +38,15 @@ const Venta = sequelize.define('ventas', {
     }
   },
 
+  id_usuario: {
+    type: DataTypes.BIGINT,
+    allowNull: true,
+    references: {
+      model: 'usuario',
+      key: 'id_usuario'
+    }
+  },
+
   numeroFactura: {
     type: DataTypes.INTEGER,
     allowNull: false,
