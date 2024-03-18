@@ -16,11 +16,11 @@ const Servicios = sequelize.define('servicios', {
         type: DataTypes.DOUBLE,
         allowNull: false,
     },
-    tiempo: {
+    tiempo_estimado: {
         type: DataTypes.INTEGER, 
         allowNull: false,
         validate: {
-            min: 1, 
+            min: 1,
         },
     },
     estado: {
