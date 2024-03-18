@@ -2,6 +2,7 @@ const Citas = require('../models/citas');
 const Clientes = require('../models/clientes');
 const { response } = require('express');
 const Citas_Servicios = require('../models/citas_servicios');
+const Usuario = require('../models/usuarios');
 
 const getCitas = async (req, res = response) => {
   try {
@@ -62,17 +63,17 @@ const getCitasServcios = async (req, res = response) => {
 }
   
 const getCitasHoy = async (req, res = response) => {
-  const { cedula_cliente } = req.body;
+  const { id_usuario } = req.body;
   try {
-    const cliente = await Clientes.findOne({
-      where: { documento: cedula_cliente }
+    const usuario = await Usuario.findOne({
+      where: { id_usuario: id_usuario }
     });
-    if (!cliente) {
+    if (!usuario) {
       return res.status(404).json({ error: 'Cliente no encontrado' });
     }
 
     const ultimaCita = await Citas.findOne({
-      where: { id_cliente: cliente.id_cliente },
+      where: { id_usuario: usuario.id_usuario },
       order: [['Fecha_Atencion', 'DESC']], 
     });
 

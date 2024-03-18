@@ -8,7 +8,7 @@ route.get('/citas',verificarToken, getCitas);
 route.get('/citas/agendadas/',verificarToken, getCitasAgendadas);
 route.get('/citas/servicios/:id',verificarToken, getCitasServcios);
 route.get('/citas/:id',verificarToken, getCita);
-route.post('/citashoy',verificarToken, getCitasHoy)
+route.post('/citashoy',verificarToken, getCitasHoy);
 route.post('/citas',verificarToken, postCita);
 route.put('/citas/:id/cambiarEstado',verificarToken, putCitaEstado);
 route.put('/citas/:id',verificarToken, putCita);
