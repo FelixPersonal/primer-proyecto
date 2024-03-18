@@ -16,11 +16,12 @@ const Usuario = sequelize.define('usuario', {
   nombre_usuario: {
     type: DataTypes.STRING(255),
     allowNull: false,
+    unique: true, // Agregar esta línea para hacer que el nombre de usuario sea único
     validate: {
-      notEmpty: true,
-      is: /^[a-zA-Z\s]*$/,
+        notEmpty: true,
+        is: /^[a-zA-Z\s]*$/,
     },
-  },
+},
   contrasena: {
     type: DataTypes.STRING(255),
     allowNull: false,
@@ -42,15 +43,6 @@ const Usuario = sequelize.define('usuario', {
       },
     },
   },
-  /*
-  reset_token: {
-    type: DataTypes.STRING, // Almacena el token de restablecimiento de contraseña
-  },
-  reset_token_expires: {
-    type: DataTypes.DATE, // Almacena la fecha de vencimiento del token
-  },
-
-  */
   created_at: {
     type: DataTypes.DATE,
     defaultValue: DataTypes.NOW,

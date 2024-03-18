@@ -40,7 +40,6 @@ const getUsuario = async (req, res = response) => {
         res.status(500).json({ error: 'Error al obtener el usuario' });
     }
 };
-
 const postUsuario = async (req, res = response) => {
     const newEntryData = req.body;
 
@@ -49,24 +48,27 @@ const postUsuario = async (req, res = response) => {
     }
 
     try {
-        // Verificar si se especificó un rol en los datos del nuevo usuario
-        if (!newEntryData.id_rol) {
-            // Buscar el rol de cliente por nombre y asignar su ID
-            let clienteRol = await Rol.findOne({ where: { nombre: 'cliente' } });
-            if (!clienteRol) {
-                // Si no existe un rol de cliente, asignar un valor predeterminado para el rol de cliente
-                clienteRol = await Rol.findOne({ where: { id_rol: 1 } }); // Buscar el rol con ID 1
-            }
-            newEntryData.id_rol = clienteRol.id_rol;
-        }
-
         const createdUsuarioItem = await Usuario.create(newEntryData);
         res.status(201).json({ message: 'Usuario guardado exitosamente', usuario: createdUsuarioItem });
     } catch (error) {
         console.error(error);
+
+        // Verificar si el error es debido a un nombre de usuario o correo electrónico duplicado
+        if (error.name === 'SequelizeUniqueConstraintError') {
+            let errorMessage = '';
+            if (error.errors[0].path === 'nombre_usuario') {
+                errorMessage = 'El nombre de usuario ya está en uso. Por favor, elige otro nombre.';
+            } else if (error.errors[0].path === 'correo') {
+                errorMessage = 'El correo electrónico ya está en uso. Por favor, ingresa otro correo.';
+            }
+            return res.status(400).json({ error: errorMessage });
+        }
+
         res.status(400).json({ error: 'Error al crear un elemento de Usuario' });
     }
 };
+
+
 
 const putUsuario = async (req, res = response) => {
     const { id } = req.params;
@@ -75,12 +77,30 @@ const putUsuario = async (req, res = response) => {
     try {
         const usuario = await Usuario.findByPk(id);
 
-        if (usuario) {
-            await usuario.update(updatedData);
-            res.json({ msg: `El elemento de Usuario fue actualizado exitosamente.` });
-        } else {
-            res.status(404).json({ error: `No se encontró un elemento de Usuario con ID ${id}` });
+        if (!usuario) {
+            return res.status(404).json({ error: `No se encontró un elemento de Usuario con ID ${id}` });
         }
+
+        // Validar si se está intentando cambiar el nombre de usuario
+        if (updatedData.nombre_usuario && updatedData.nombre_usuario !== usuario.nombre_usuario) {
+            const existingUsername = await Usuario.findOne({ where: { nombre_usuario: updatedData.nombre_usuario } });
+
+            if (existingUsername) {
+                return res.status(400).json({ error: 'El nombre de usuario ya está en uso' });
+            }
+        }
+
+        // Validar si se está intentando cambiar el correo
+        if (updatedData.correo && updatedData.correo !== usuario.correo) {
+            const existingEmail = await Usuario.findOne({ where: { correo: updatedData.correo } });
+
+            if (existingEmail) {
+                return res.status(400).json({ error: 'El correo electrónico ya está en uso' });
+            }
+        }
+
+        await usuario.update(updatedData);
+        res.json({ msg: `El elemento de Usuario fue actualizado exitosamente.` });
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Error al actualizar el elemento de Usuario' });
@@ -104,7 +124,6 @@ const deleteUsuario = async (req, res = response) => {
         res.status(500).json({ error: 'Error al eliminar el elemento de usuario' });
     }
 };
-
 const actualizarPerfil = async (req, res) => {
     try {
         const { nombre, correo, nuevaContrasena } = req.body;
@@ -143,12 +162,17 @@ const actualizarPerfil = async (req, res) => {
         res.json({ mensaje: 'Perfil actualizado con éxito' });
     } catch (error) {
         console.error('Error al actualizar el perfil:', error);
+        if (error.name === 'SequelizeUniqueConstraintError') {
+            if (error.fields.nombre_usuario) {
+                return res.status(400).json({ mensaje: 'El nombre de usuario ya está en uso' });
+            } else if (error.fields.correo) {
+                return res.status(400).json({ mensaje: 'El correo electrónico ya está en uso' });
+            }
+        }
         res.status(500).json({ mensaje: 'Error al actualizar el perfil' });
     }
+}
 
-   
-    
-};
 const actualizarEstadoUsuario = async (req, res = response) => {
     const { id } = req.params;
     const { estado } = req.body;
