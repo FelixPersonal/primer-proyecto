@@ -107,6 +107,8 @@ const putUsuario = async (req, res = response) => {
     }
 };
 
+
+
 const deleteUsuario = async (req, res = response) => {
     const { id } = req.params;
 
@@ -124,6 +126,9 @@ const deleteUsuario = async (req, res = response) => {
         res.status(500).json({ error: 'Error al eliminar el elemento de usuario' });
     }
 };
+
+
+
 const actualizarPerfil = async (req, res) => {
     try {
         const { nombre, correo, nuevaContrasena } = req.body;
