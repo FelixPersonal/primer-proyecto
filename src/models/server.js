@@ -11,6 +11,7 @@ const editarPerfil = require('../controllers/usuarios');
 const Rol = require('../models/roles');
 const Usuario = require('../models/usuarios');
 const Permiso = require('./permisos');
+const RolPermiso = require('./rolPermiso');
 
 class Server {
   constructor() {
@@ -53,15 +54,6 @@ class Server {
       const cantidadRoles = await Rol.count();
       const cantidadUsuarios = await Usuario.count();
       const cantidadPermisos = await Permiso.count();
-      
-      // Si no hay ningún rol, crea uno automáticamente
-      if (cantidadRoles === 0) {
-        await Rol.create({
-          nombre: 'SuperAdmin',
-          estado: 'Activo',
-        });
-        console.log('Se ha creado el rol por defecto.');
-      }
 
       const permisos = [
         { nombre_permiso: 'Dashboard', ruta: '/dashboard' },
@@ -92,6 +84,23 @@ class Server {
         }
       } else {
         console.log('Ya existen permisos en la base de datos.');
+      }
+
+      // Si no hay ningún rol, crea uno automáticamente
+      if (cantidadRoles === 0) {
+        await Rol.create({
+          nombre: 'SuperAdmin',
+          estado: 'Activo',
+        });
+        console.log('Se ha creado el rol por defecto.');
+
+        // Crear los RolPermiso para el rol 'SuperAdmin'
+        for (let i = 1; i <= 11; i++) {
+          await RolPermiso.create({
+            id_rol: 1,
+            id_permiso: i,
+          });
+        }
       }
 
       if (cantidadUsuarios === 0) {
