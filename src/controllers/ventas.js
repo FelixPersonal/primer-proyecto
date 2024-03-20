@@ -80,8 +80,7 @@ const postVentas = async (req, res = response) => {
       nombre: cliente.nombre,
       apellido: cliente.apellido,
       documento: cliente.documento,
-      nombre_empleado: empleado.nombre,
-      nombre: usuario.nombre_usuario
+      nombre_empleado: empleado.nombre
     });
     let id_venta = venta.get('id_ventas');
     console.log(productos)
