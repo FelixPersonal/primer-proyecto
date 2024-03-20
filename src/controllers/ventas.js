@@ -57,11 +57,6 @@ const postVentas = async (req, res = response) => {
     if (!empleado) {
       return res.status(404).json({ error: 'Empleado no encontrado' });
     }
-
-    const usuario = await Usuario.findByPk(nueva_venta.usuarioId);
-    if (!usuario) {
-      return res.status(404).json({ error: 'Usuario no encontrado' });
-    }
     // Crear la venta
     const productos = nueva_venta.productos;
     const servicios = nueva_venta.servicios;
