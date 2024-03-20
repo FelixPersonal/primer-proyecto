@@ -8,10 +8,11 @@ const authController = require('../controllers/authController');
 const recuperarContrasena = require('../controllers/resetPassword');
 const solicitarRestablecimiento = require('../controllers/resetPassword');
 const editarPerfil = require('../controllers/usuarios');
-const Rol = require('../models/roles');
+const Rol = require('./roles');
 const Usuario = require('../models/usuarios');
 const Permiso = require('./permisos');
-const RolPermiso = require('./rolPermiso');
+const RolPermiso = require('../models/rolPermiso');
+
 
 class Server {
   constructor() {
@@ -50,41 +51,10 @@ class Server {
 
   async inicializarBaseDeDatos() {
     try {
-      // Verificar si existen roles en la base de datos
+      // Verificar si existen roles, usuarios y permisos en la base de datos
       const cantidadRoles = await Rol.count();
       const cantidadUsuarios = await Usuario.count();
       const cantidadPermisos = await Permiso.count();
-
-      const permisos = [
-        { nombre_permiso: 'Dashboard', ruta: '/dashboard' },
-        { nombre_permiso: 'Agenda', ruta: '/agendas/crearconfiguracion' },
-        { nombre_permiso: 'Ventas', ruta: '/ventas' },
-        { nombre_permiso: 'Proveedores', ruta: '/proveedores' },
-        { nombre_permiso: 'Productos', ruta: '/productos' },
-        { nombre_permiso: 'Clientes', ruta: '/clientes/listaclientes' },
-        { nombre_permiso: 'Servicios', ruta: '/servicios' },
-        { nombre_permiso: 'Empleados', ruta: '/empleados' },
-        { nombre_permiso: 'Compras', ruta: '/compras' },
-        { nombre_permiso: 'Roles', ruta: '/listarol' },
-        { nombre_permiso: 'Usuarios', ruta: '/listausuarios' },
-      ];
-
-      if (cantidadPermisos === 0) {
-        try {
-          for (const permiso of permisos) {
-            await Permiso.create({
-              nombre_permiso: permiso.nombre_permiso,
-              ruta: permiso.ruta,
-            });
-            console.log(`Se ha creado el permiso: ${permiso.nombre_permiso}`);
-          }
-          console.log('Se han creado los permisos por defecto.');
-        } catch (error) {
-          console.error('Error al crear permisos:', error);
-        }
-      } else {
-        console.log('Ya existen permisos en la base de datos.');
-      }
 
       // Si no hay ningún rol, crea uno automáticamente
       if (cantidadRoles === 0) {
@@ -93,18 +63,32 @@ class Server {
           estado: 'Activo',
         });
         console.log('Se ha creado el rol por defecto.');
-
-        // Crear los RolPermiso para el rol 'SuperAdmin'
-        for (let i = 1; i <= 11; i++) {
-          await RolPermiso.create({
-            id_rol: 1,
-            id_permiso: i,
-          });
-        }
       }
 
+      // Si no hay ningún permiso, crea los permisos por defecto
+      if (cantidadPermisos === 0) {
+        const permisos = [
+          { nombre_permiso: 'Dashboard', ruta: '/dashboard' },
+          { nombre_permiso: 'Agenda', ruta: '/agendas/crearconfiguracion' },
+          { nombre_permiso: 'Ventas', ruta: '/ventas' },
+          { nombre_permiso: 'Proveedores', ruta: '/proveedores' },
+          { nombre_permiso: 'Productos', ruta: '/productos' },
+          { nombre_permiso: 'Clientes', ruta: '/clientes/listaclientes' },
+          { nombre_permiso: 'Servicios', ruta: '/servicios' },
+          { nombre_permiso: 'Empleados', ruta: '/empleados' },
+          { nombre_permiso: 'Compras', ruta: '/compras' },
+          { nombre_permiso: 'Roles', ruta: '/listarol' },
+          { nombre_permiso: 'Usuarios', ruta: '/listausuarios' },
+        ];
+
+        await Permiso.bulkCreate(permisos);
+        console.log('Se han creado los permisos por defecto.');
+      }
+
+      // Si no hay ningún usuario, crea el usuario por defecto
       if (cantidadUsuarios === 0) {
-        await Usuario.create({
+        // Crear usuario por defecto
+        const usuarioPorDefecto = await Usuario.create({
           id_rol: 1,
           nombre_usuario: 'admin',
           contrasena: '12345678S',
@@ -113,12 +97,31 @@ class Server {
         });
 
         console.log('Se ha creado el usuario por defecto.');
-      }
 
+        // Obtener todos los permisos disponibles de la base de datos
+        const permisos = await Permiso.findAll();
+
+        // Asignar todos los permisos al usuario creado
+        await usuarioPorDefecto.setPermisos(permisos);
+
+        console.log('Se han asignado todos los permisos al usuario por defecto.');
+
+        // Registrar los permisos en la tabla intermedia RolPermiso
+        await Promise.all(permisos.map(async (permiso) => {
+          await RolPermiso.create({
+            id_rol: usuarioPorDefecto.id_rol,
+            id_permiso: permiso.id_permiso,
+          });
+        }));
+
+        console.log('Se han registrado los permisos en la tabla intermedia.');
+      }
     } catch (error) {
       console.error('Error al inicializar la base de datos:', error);
     }
   }
+
+
 
 
 
@@ -171,7 +174,7 @@ class Server {
       socket.on('clienteConectado', (data) => {
         console.log('Cliente conectado:', data);
         // Envía una confirmación al cliente
-        socket.emit('confirmacionConexion', { message: 'Conexión establecida correctamente' });
+        socket.emit('confirmacionConexion', { message: 'Conexión establecida correctamentee' });
       });
 
       // Manejo de evento 'mensaje' enviado desde el cliente
