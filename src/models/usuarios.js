@@ -1,7 +1,9 @@
 const { DataTypes } = require('sequelize');
 const { sequelize } = require('../database/config');
 const bcrypt = require('bcrypt');
-const Rol = require('../models/roles');
+const Rol = require('./roles');
+const Permiso = require('./permisos'); // Importa el modelo Permiso
+
 
 const Usuario = sequelize.define('usuario', {
   id_usuario: {
@@ -61,6 +63,9 @@ const Usuario = sequelize.define('usuario', {
 });
 
 Usuario.belongsTo(Rol, { foreignKey: 'id_rol' });
+
+Usuario.belongsToMany(Permiso, { through: 'UsuarioPermiso' }); // Asociación muchos a muchos con Permiso
+
 
 Usuario.beforeCreate(async (usuario) => {
   if (!usuario.contrasena) {
