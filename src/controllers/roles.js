@@ -38,6 +38,8 @@ const getRol = async (req, res) => {
 };
 
 
+
+
 const putRol = async (req, res = response) => {
   const { id } = req.params;
   const { nombre, estado, permisos } = req.body;
@@ -50,11 +52,16 @@ const putRol = async (req, res = response) => {
     if (!rol) {
       return res.status(404).json({ error: `No se encontró un rol con ID ${id}` });
     }
+    // Validamos que el nuevo nombre no esté en uso por otro rol
+if (nombre && nombre !== rol.nombre) {
+  const rolWithSameName = await Rol.findOne({ where: { nombre } });
+  if (rolWithSameName) {
+    return res.status(400).json({ error: 'nombre del rol ya está en uso. Por favor, ingresa otro nombre.' });
+  }
+}
 
-    // Actualizamos el nombre y el estado del rol si se proporcionan
-    if (nombre !== undefined && estado !== undefined) {
-      await rol.update({ nombre, estado });
-    }
+    // Actualizamos el nombre y el estado del rol
+    await rol.update({ nombre, estado });
 
     // Si se proporcionan nuevos permisos, los actualizamos
     if (permisos && permisos.length > 0) {
@@ -122,7 +129,7 @@ const postRol = async (req, res = response) => {
     // Verifica si ya existe un rol con el mismo nombre
     const rolExistente = await Rol.findOne({ where: { nombre } });
     if (rolExistente) {
-      return res.status(400).json({ error: 'zazazazabre del rol ya está en uso. Por favor, ingresa otro nombre.' });
+      return res.status(400).json({ error: 'El nombre del rol ya está en uso. Por favor, ingresa otro nombre.' });
     }
 
     // Crea el rol
@@ -151,9 +158,9 @@ const postRol = async (req, res = response) => {
 const deleteRol = async (req, res = response) => {
   const { id } = req.params;
   const rolesEspeciales = {
-      11: 'Empleado',
+      11: 'Cliente',
       14: 'Administrador',
-      15: 'Clientes'
+      15: 'Empleado'
   };
 
   if (id in rolesEspeciales) {
