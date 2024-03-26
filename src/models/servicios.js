@@ -17,7 +17,7 @@ const Servicios = sequelize.define('servicios', {
         allowNull: false,
     },
     tiempo: {
-        type: DataTypes.INTEGER, // Tiempo en minutos
+        type: DataTypes.INTEGER, // Tiempmmo en minutos
         allowNull: false,
     },
     estado: {
