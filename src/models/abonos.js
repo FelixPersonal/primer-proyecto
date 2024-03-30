@@ -17,8 +17,7 @@ const Abonos = sequelize.define('abonos', {
             key: 'id_ventas'
         }
     },
-    
-    id_cliente: {
+        id_cliente: {
         type: DataTypes.INTEGER, // O el tipo de datos correspondiente para id_cliente
         allowNull: false,
         references:{

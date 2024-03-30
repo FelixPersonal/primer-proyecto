@@ -34,7 +34,7 @@ const getAbono = async (req, res = response) => {
 
 const postAbonos = async (req, res = response) => {
 
-    const { id_ventas, monto_abono } = req.body;
+    const { id_ventas, id_cliente, monto_abono } = req.body;
 
     try {
         const venta = await Venta.findByPk(id_ventas);
@@ -58,6 +58,7 @@ const postAbonos = async (req, res = response) => {
 
         const abono = await Abonos.create({
             id_ventas: id_ventas,
+            id_cliente: id_cliente,
             precio_agregar: monto_abono,
             precio_pendiente: nuevo_precio_pendiente,
             fecha_abono: new Date()
