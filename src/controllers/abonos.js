@@ -45,9 +45,10 @@ const postAbonos = async (req, res = response) => {
             return res.status(400).json({ error: 'La venta no está pendiente, no se puede crear un abono' });
         }
 
-        let precio_pendiente_actual = venta.precio;
-        const nuevo_precio_pendiente = precio_pendiente_actual - monto_abono;
+        // Restar el monto del abono al precio pendiente actual
+        const nuevo_precio_pendiente = venta.precio_pendiente - monto_abono;
 
+        // Actualizar el precio pendiente en la venta
         await venta.update({ precio_pendiente: nuevo_precio_pendiente });
 
         if (nuevo_precio_pendiente <= 0) {
@@ -69,7 +70,7 @@ const postAbonos = async (req, res = response) => {
                 id_ventas: id_ventas,
                 id_cliente: id_cliente,
                 precio_agregar: monto_abono,
-                precio_pendiente: nuevo_precio_pendiente,
+                precio_pendiente: nuevo_precio_pendiente, // Aquí se actualiza correctamente
                 fecha_abono: new Date()
             });
         }
@@ -83,6 +84,7 @@ const postAbonos = async (req, res = response) => {
         res.status(500).json({ error: 'Error al crear el abono.' });
     }
 };
+
 
 
 module.exports = {
