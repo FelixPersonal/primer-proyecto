@@ -1,6 +1,3 @@
-const { DataTypes } = require ('sequelize');
-const { sequelize } = require ('../database/config');
-
 const Abonos = sequelize.define('abonos', {
     id_abonos: {
         autoIncrement: true,
@@ -17,7 +14,15 @@ const Abonos = sequelize.define('abonos', {
             key: 'id_ventas'
         }
     },
-    
+
+    id_cliente: {
+        type: DataTypes.INTEGER, // O el tipo de datos correspondiente para id_cliente
+        allowNull: false,
+        references:{
+            model: 'clientes',
+            key: 'id_cliente'
+        }
+    },
 
     precio_agregar: {
         type: DataTypes.DOUBLE,
