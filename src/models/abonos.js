@@ -1,5 +1,5 @@
-const { DataTypes } = require ('sequelize');
-const { sequelize } = require ('../database/config');
+const { DataTypes } = require('sequelize');
+const { sequelize } = require('../database/config');
 
 const Abonos = sequelize.define('abonos', {
     id_abonos: {
@@ -12,9 +12,27 @@ const Abonos = sequelize.define('abonos', {
     id_ventas: {
         type: DataTypes.INTEGER,
         allowNull: true,
-        references:{
+        references: {
             model: 'ventas',
             key: 'id_ventas'
+        }
+    },
+
+    id_usuario: {
+        type: DataTypes.BIGINT,
+        allowNull: true,
+        references: {
+            model: 'usuarios',
+            key: 'id_usuario'
+        }
+    },
+
+    id_cliente: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+            model: 'clientes',
+            key: 'id_cliente'
         }
     },
 
@@ -34,16 +52,16 @@ const Abonos = sequelize.define('abonos', {
         type: DataTypes.DATE,
         allowNull: true,
     }
-},{
+}, {
     sequelize,
     tableName: 'abonos',
-    Timestamps: true,
+    timestamps: true, // Cambio aquí
     indexes: [
         {
             name: "abonos_pkey",
             unique: true,
             fields: [
-                {name: "id_abonos"},
+                { name: "id_abonos" },
             ]
         },
     ]
