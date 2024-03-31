@@ -177,29 +177,29 @@ function calculateTotalPrice(productos, servicios) {
 
 const postCargarVentas = async (req, res = response) => {
   // Obtener datos de la solicitud
-  const { nueva_venta } = req.body;
-  const { estado } = nueva_venta; // Obtener el estado de la venta desde nueva_venta
+  const { nueva_cargarventa } = req.body;
+  const { estado } = nueva_cargarventa; // Obtener el estado de la venta desde nueva_cargarventa
   try {
-    const usuario = await Usuario.findByPk(nueva_venta.usuarioId);
+    const usuario = await Usuario.findByPk(nueva_cargarventa.usuarioId);
     if (!usuario) {
       return res.status(404).json({ error: 'usuario no encontrado' });
     }
 
-    const empleado = await Empleado.findByPk(nueva_venta.empleadoId);
+    const empleado = await Empleado.findByPk(nueva_cargarventa.empleadoId);
     if (!empleado) {
       return res.status(404).json({ error: 'Empleado no encontrado' });
     }
     // Crear la venta
-    const productos = nueva_venta.productos;
-    const servicios = nueva_venta.servicios;
+    const productos = nueva_cargarventa.productos;
+    const servicios = nueva_cargarventa.servicios;
     console.log('Productos: ', productos)
     console.log('Servicios: ', servicios)
     const precio = calculateTotalPrice(productos, servicios);
     const venta = await Venta.create({
-      id_cita: nueva_venta.citaId,
-      id_empleado: nueva_venta.empleadoId,
-      id_usuario: nueva_venta.usuarioId,
-      numeroFactura: nueva_venta.numeroFactura,
+      id_cita: nueva_cargarventa.citaId,
+      id_empleado: nueva_cargarventa.empleadoId,
+      id_usuario: nueva_cargarventa.usuarioId,
+      numeroFactura: nueva_cargarventa.numeroFactura,
       precio: precio,
       estado: estado,
       estado_anulado: 'Activo',
@@ -260,11 +260,11 @@ const postCargarVentas = async (req, res = response) => {
       }
     }
 
-    if (nueva_venta.citaId !== null) {
-      console.log("Id cita: ", nueva_venta.citaId);
+    if (nueva_cargarventa.citaId !== null) {
+      console.log("Id cita: ", nueva_cargarventa.citaId);
       try {
         // Buscar la cita por su ID
-        const cita = await Citas.findByPk(nueva_venta.citaId);
+        const cita = await Citas.findByPk(nueva_cargarventa.citaId);
 
         if (cita) {
           // Actualizar el estado de la cita a "Finalizado"
