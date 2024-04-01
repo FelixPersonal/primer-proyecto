@@ -9,6 +9,8 @@ const Clientes = require('../models/clientes');
 const Empleado = require('../models/empleados');
 const Usuario = require('../models/usuarios');
 
+
+//lista de ventas
 const getVentas = async (req, res = response) => {
   try {
     const ventas = await Venta.findAll({
@@ -22,6 +24,7 @@ const getVentas = async (req, res = response) => {
 };
 
 
+//lista de ventas por id
 const getVenta = async (req, res = response) => {
 
   const id_ventas = req.params.id;
@@ -42,7 +45,7 @@ const getVenta = async (req, res = response) => {
 };
 
 
-
+//crear una venta
 const postVentas = async (req, res = response) => {
   // Obtener datos de la solicitud
   const { nueva_venta } = req.body;
@@ -66,8 +69,8 @@ const postVentas = async (req, res = response) => {
     const venta = await Venta.create({
       id_cita: nueva_venta.citaId,
       id_cliente: nueva_venta.clienteId,
-      id_empleado: nueva_venta.empleadoId,
       id_usuario: nueva_venta.usuarioId,
+      id_empleado: nueva_venta.empleadoId,
       numeroFactura: nueva_venta.numeroFactura,
       precio: precio,
       estado: estado,
@@ -175,6 +178,8 @@ function calculateTotalPrice(productos, servicios) {
 }
 
 
+
+//cargar una venta
 const postCargarVentas = async (req, res = response) => {
   // Obtener datos de la solicitud
   const { nueva_cargarventa } = req.body;
@@ -198,6 +203,7 @@ const postCargarVentas = async (req, res = response) => {
     const venta = await Venta.create({
       id_cita: nueva_cargarventa.citaId,
       id_empleado: nueva_cargarventa.empleadoId,
+      id_cliente: nueva_cargarventa.clienteId,
       id_usuario: nueva_cargarventa.usuarioId,
       numeroFactura: nueva_cargarventa.numeroFactura,
       precio: precio,
@@ -294,16 +300,23 @@ function calculateTotalPrice(productos, servicios) {
   let totalPrice = 0;
   for (const producto of productos) {
     const precioFloat = parseFloat(producto.precioUnitario);
-    totalPrice += producto.cantidad * precioFloat;
+    const cantidad = parseInt(producto.cantidad);
+    if (!isNaN(precioFloat) && !isNaN(cantidad)) {
+      totalPrice += cantidad * precioFloat;
+    }
   }
   for (const servicio of servicios) {
     const precioFloat = parseFloat(servicio.precioUnitario);
-    totalPrice += servicio.cantidad * precioFloat;
+    const cantidad = parseInt(servicio.cantidad);
+    if (!isNaN(precioFloat) && !isNaN(cantidad)) {
+      totalPrice += cantidad * precioFloat;
+    }
   }
   return totalPrice;
 }
 
 
+//parte de abonos
 const cancelarVenta = async (req, res = response) => {
   const { id_ventas } = req.params;
   console.log(id_ventas)
@@ -325,6 +338,8 @@ const cancelarVenta = async (req, res = response) => {
   }
 }
 
+
+//cambiar estado
 const cambiarEstado = async (req, res = response) => {
   const id_ventas = req.params.id_ventas;
 
