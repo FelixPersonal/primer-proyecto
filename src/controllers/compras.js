@@ -98,7 +98,7 @@ const cambiarEstadoCompra = async (req, res = response) => {
 
     if (compra) {
       // Verificar si el estado actual es diferente de "Pagado"
-      if (compra.estado !== "Pagado" || compra.estado !== "Cancelado") {
+      if (compra.estado !== "Cancelado") {
         // Actualizar solo el campo 'estado'
         await compra.update({ estado: estado });
 
