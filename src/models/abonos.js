@@ -18,6 +18,15 @@ const Abonos = sequelize.define('abonos', {
         }
     },
 
+    id_cliente: {
+        type: DataTypes.INTEGER, // O el tipo de datos correspondiente para id_cliente
+        allowNull: true,
+        references:{
+            model: 'clientes',
+            key: 'id_cliente'
+        }
+    },
+
     precio_agregar: {
         type: DataTypes.DOUBLE,
         allowNull: true,
@@ -37,7 +46,7 @@ const Abonos = sequelize.define('abonos', {
 },{
     sequelize,
     tableName: 'abonos',
-    Timestamps: true,
+    timestamps: true, // Cambio aquí
     indexes: [
         {
             name: "abonos_pkey",

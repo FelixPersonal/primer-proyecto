@@ -85,7 +85,7 @@ class Server {
           { nombre_permiso: 'Ventas', ruta: '/ventas' },
           { nombre_permiso: 'Proveedores', ruta: '/proveedores' },
           { nombre_permiso: 'Productos', ruta: '/productos' },
-          { nombre_permiso: 'Clientes', ruta: '/clientes/listaclientes' },
+          { nombre_permiso: 'Clientes', ruta: '/clientes/listaClientes' },
           { nombre_permiso: 'Servicios', ruta: '/servicios' },
           { nombre_permiso: 'Empleados', ruta: '/empleados' },
           { nombre_permiso: 'Compras', ruta: '/compras' },
@@ -102,7 +102,7 @@ class Server {
         // Crear usuario por defecto
         const usuarioPorDefecto = await Usuario.create({
           id_rol: 1,
-          nombre_usuario: 'admin',
+          nombre_usuario: 'Admin',
           contrasena: '12345678S',
           correo: 'adminbac@gmail.com',
           estado: 'Activo',

@@ -16,7 +16,7 @@ const getProductos = async (req, res = response) => {
 
 const getProductosActivos = async (req, res = response) => {
     try {
-        const productos = await Producto.findAll({where: { estado: true}});
+        const productos = await Producto.findAll({ where: { estado: true } });
         res.json({ productos });
     } catch (error) {
         console.error(error);
@@ -41,6 +41,23 @@ const getProducto = async (req, res = response) => {
     }
 }
 
+const postProducto = async (req, res = response) => {
+    const newEntryData = req.body;
+
+    try {
+        const createdProductoItem = await Producto.create(newEntryData);
+        res.status(201).json({ message: 'Producto guardado exitosamente', producto: createdProductoItem });
+    } catch (error) {
+        if (error.name === 'SequelizeUniqueConstraintError') {
+            res.status(400).json({ error: 'Ya existe un producto con este nombre' });
+        } else {
+            console.error('Error al crear el producto:', error.message);
+            console.error('Stack trace:', error.stack);
+            res.status(500).json({ error: 'Error interno al crear el producto' });
+        }
+    }
+}
+
 const putProducto = async (req, res = response) => {
     const { id } = req.params;
     const updatedData = req.body;
@@ -57,23 +74,16 @@ const putProducto = async (req, res = response) => {
             res.status(404).json({ error: `No se encontró un elemento de Producto con ID ${id}` });
         }
     } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: 'Error al actualizar el elemento de Producto' });
+        if (error.name === 'SequelizeUniqueConstraintError') {
+            res.status(400).json({ error: 'Ya existe un producto con este nombre' });
+        } else {
+            console.error('Error al actualizar el producto:', error.message);
+            console.error('Stack trace:', error.stack);
+            res.status(500).json({ error: 'Error interno al actualizar el producto' });
+        }
     }
 }
 
-const postProducto = async (req, res = response) => {
-    const newEntryData = req.body;
-
-    try {
-        const createdProductoItem = await Producto.create(newEntryData);
-        res.status(201).json({ message: 'Producto guardado exitosamente', producto: createdProductoItem });
-    } catch (error) {
-        console.error('Error al crear el producto:', error.message);
-        console.error('Stack trace:', error.stack);
-        res.status(500).json({ error: 'Error interno al crear el producto' });
-    }
-}
 
 
 
