@@ -1,4 +1,6 @@
 const CitasServicios = require('../models/citas_servicios');
+const Citas = require('../models/citas');
+const Servicios = require('../models/servicios');
 const { response } = require('express');
 
 const getCitasServicios = async (req, res = response) => {
