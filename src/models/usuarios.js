@@ -18,12 +18,13 @@ const Usuario = sequelize.define('usuario', {
   nombre_usuario: {
     type: DataTypes.STRING(255),
     allowNull: false,
-    unique: true, // Agregar esta línea para hacer que el nombre de usuario sea único
+    unique: true,
     validate: {
         notEmpty: true,
-        is: /^[a-zA-Z\s]*$/,
+        is: /^[a-zA-Z0-9_-]*$/, // Permite letras, números, guiones bajos y guiones
     },
 },
+
   contrasena: {
     type: DataTypes.STRING(255),
     allowNull: false,

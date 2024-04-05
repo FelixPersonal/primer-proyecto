@@ -61,7 +61,19 @@ class Server {
         await Rol.create({
           nombre: 'SuperAdmin',
           estado: 'Activo',
-        });
+        }),
+        await Rol.create({
+          nombre: 'Cliente',
+          estado: 'Activo',
+
+        }),
+        await Rol.create({
+          nombre: 'Empleado',
+          estado: 'Activo',
+
+        })
+
+
         console.log('Se ha creado el rol por defecto.');
       }
 
@@ -94,6 +106,8 @@ class Server {
           contrasena: '12345678S',
           correo: 'adminbac@gmail.com',
           estado: 'Activo',
+
+          
         });
 
         console.log('Se ha creado el usuario por defecto.');
@@ -103,6 +117,8 @@ class Server {
 
         // Asignar todos los permisos al usuario creado
         await usuarioPorDefecto.setPermisos(permisos);
+
+
 
         console.log('Se han asignado todos los permisos al usuario por defecto.');
 

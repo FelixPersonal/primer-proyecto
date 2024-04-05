@@ -6,7 +6,6 @@ const nodemailer = require('nodemailer');
 const {generarToken } = require ('./authController')
 
 
-
 // Método para solicitar restablecimiento
 const solicitarRestablecimiento = async (req, res) => {
   const { correo } = req.body;
@@ -18,9 +17,9 @@ const solicitarRestablecimiento = async (req, res) => {
       return res.status(404).json({ mensaje: 'Usuario no encontrado' });
     }
 
-    // Generar token de restablecimiento y establecer la fecha de vencimiento
+    // Generar token de restablecimiento y establecer la fecha de vencimiento (5 minutos)
     const resetToken = generarToken(usuario, 'reset');
-    const resetTokenExpires = moment().add(1, 'day').toDate(); // El token expira en 1 día
+    const resetTokenExpires = moment().add(5, 'minutes').toDate(); // El token expira en 5 minutos
 
     // Actualizar en la base de datos
     await usuario.update({ reset_token: resetToken, reset_token_expires: resetTokenExpires });
@@ -34,12 +33,15 @@ const solicitarRestablecimiento = async (req, res) => {
     // Enviar correo electrónico con el enlace de recuperación que contiene el token
     await enviarCorreoRecuperacion(usuario.correo, resetToken, credencialesGmail);
 
-    res.json({ mensaje: 'Correo de recuperación enviado con éxito',resetToken });
+    res.json({ mensaje: 'Correo de recuperación enviado con éxito', resetToken });
   } catch (error) {
     console.error(error);
     res.status(500).json({ mensaje: 'Error en la solicitud de restablecimiento de contraseña' });
   }
 };
+
+
+
 
 
 
@@ -73,13 +75,17 @@ const enviarCorreoRecuperacion = async (correoDestino, token, credenciales) => {
     throw error;
   }
 };
-
 const cambiarContrasena = async (req, res) => {
   const { token, nuevaContrasena } = req.body;
 
   try {
     // Verifica y decodifica el token
     const decodedToken = jwt.verify(token, 'secreto-seguro');
+
+    // Verifica si el token ha expirado
+    if (moment().isAfter(decodedToken.exp * 1000)) {
+      return res.status(400).json({ mensaje: 'El token de restablecimiento ha caducado' });
+    }
 
     // Busca al usuario en la base de datos por el ID proporcionado en el token
     const usuario = await Usuario.findByPk(decodedToken.userId);
@@ -101,40 +107,7 @@ const cambiarContrasena = async (req, res) => {
 };
 
 
-  // Verifica si el token de cambio de contraseña ha expirado (opcional)
 
-    //if (moment().isAfter(decodedToken.exp * 1000)) {
-     // return res.status(400).json({ mensaje: 'El token de cambio de contraseña ha caducado' });
-   // }
-
-
-
-/*const recuperarContrasena = async (req, res) => {
-  const { correo } = req.body;
-
-  try {
-    const usuario = await Usuario.findOne({ where: { correo } });
-
-    if (!usuario) {
-      return res.status(404).json({ mensaje: 'Usuario no encontrado' });
-    }
-
-    // Generar token de restablecimiento y establecer la fecha de vencimiento
-    const resetToken = generarToken(usuario, 'reset');
-    const resetTokenExpires = moment().add(1, 'day').toDate(); // El token expira en 1 día
-
-    // Actualizar en la base de datos
-    await usuario.update({ reset_token: resetToken, reset_token_expires: resetTokenExpires });
-
-    // Enviar correo electrónico con el enlace de recuperación que contiene el token
-    await enviarCorreoRecuperacion(usuario.correo, resetToken);
-
-    res.json({ mensaje: 'Correo de recuperación enviado con éxito' });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ mensaje: 'Error en la recuperación de contraseña' });
-  }
-  */
   
 
 module.exports = {solicitarRestablecimiento,cambiarContrasena};
