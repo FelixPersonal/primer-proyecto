@@ -2,6 +2,7 @@ const Compras = require("../models/compras");
 const { response } = require("express");
 const DetallecomprasP = require("../models/detalleComprasP");
 const DetallecomprasIn = require("../models/detalleComprasIn");
+const Productos = require("../models/productos");
 
 const getCompras = async (req, res = response) => {
   try {
@@ -97,30 +98,42 @@ const cambiarEstadoCompra = async (req, res = response) => {
     const compra = await Compras.findByPk(id);
 
     if (compra) {
-      // Verificar si el estado actual es diferente de "Pagado"
       if (compra.estado !== "Cancelado") {
         // Actualizar solo el campo 'estado'
         await compra.update({ estado: estado });
 
+        // Obtener detalles de compra asociados a esta compra
+        const detallesCompra = await DetallecomprasP.findAll({ where: { id_compra: id } });
+
+        // Iterar sobre los detalles de la compra y actualizar productos
+        for (const detalle of detallesCompra) {
+          const producto = await Productos.findByPk(detalle.id_producto);
+          if (producto) {
+            // Actualizar precios y stock del producto
+            await producto.update({
+              precioCosto: producto.precioCosto - detalle.precioUnitario,
+              precioVenta: producto.precioVenta - detalle.precioVenta,
+              stock: producto.stock - detalle.cantidad
+            });
+          }
+        }
+
         res.json({ msg: "El estado de la compra fue actualizado" });
       } else {
-        res
-          .status(400)
-          .json({ error: "La compra ya está marcada como Pagada" });
+        res.status(400).json({ error: "La compra ya está marcada como Cancelada" });
       }
     } else {
       res.status(404).json({ error: `No se encontró la compra con ID ${id}` });
     }
   } catch (error) {
     console.error(error);
-    res
-      .status(500)
-      .json({
-        error: "Error al actualizar el estado de la compra",
-        Estado: error.message,
-      });
+    res.status(500).json({
+      error: "Error al actualizar el estado de la compra",
+      Estado: error.message,
+    });
   }
 };
+
 
 const postCompra = async (req, res = response) => {
   const body = req.body;
