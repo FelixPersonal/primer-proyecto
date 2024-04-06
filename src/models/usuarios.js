@@ -15,9 +15,11 @@ const Usuario = sequelize.define('usuario', {
     type: DataTypes.BIGINT,
     allowNull: false,
   },
+
+
   documento: {
     type: DataTypes.STRING(10),
-    allowNull: false,
+    allowNull: false, // Agregado para indicar que no puede ser nulo
     unique: true,
     validate: {
       is: /^\d+$/, // Solo números
@@ -26,28 +28,13 @@ const Usuario = sequelize.define('usuario', {
   },
   telefono: {
     type: DataTypes.STRING(10),
-    allowNull: false,
-    validate: {
-      is: /^\d+$/, // Solo números
-      len: [10, 10], // Longitud exacta de 10 dígitos
-    },
-  },documento: {
-    type: DataTypes.STRING(10),
-    allowNull: false, // Agregado para indicar que no puede ser nulo
-    unique: true,
-    validate: {
-      is: /^\d+$/, // Solo números
-      len: [10, 10], // Longitud exacta de 10 dígitos
-    },
-},
-telefono: {
-    type: DataTypes.STRING(10),
     allowNull: false, // Agregado para indicar que no puede ser nulo
     validate: {
       is: /^\d+$/, // Solo números
       len: [10, 10], // Longitud exacta de 10 dígitos
     },
-},
+  },
+
 
   nombre_usuario: {
     type: DataTypes.STRING(255),
