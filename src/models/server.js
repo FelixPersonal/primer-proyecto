@@ -104,7 +104,7 @@ class Server {
           id_rol: 1,
           nombre_usuario: 'Admin',
           contrasena: '12345678S',
-          correo: 'adminbac@gmail.com',
+          correo: 'sionbarbershop5@gmail.com',
           estado: 'Activo',
 
           
