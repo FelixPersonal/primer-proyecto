@@ -40,7 +40,7 @@ class Server {
 
   middlewares() {
     const corsOptions = {
-      origin: 'http://localhost:3001',
+      origin: ['http://localhost:3001', 'https://proyectobac-de612.web.app'],
       credentials: true,
     };
 
