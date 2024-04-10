@@ -40,7 +40,7 @@ class Server {
 
   middlewares() {
     const corsOptions = {
-      origin: ['http://localhost:3001', 'https://bacproyecto-72045.web.app'],
+      origin: ['http://localhost:3001', 'https://proyectobac-d714e.web.app'],
       credentials: true,
     };
 
@@ -177,7 +177,7 @@ class Server {
   sockets() {
     this.io = socketIO(this.server, {
       cors: {
-        origin: ['http://localhost:3001', 'https://proyectobac-de612.web.app'],
+        origin: ['http://localhost:3001', 'https://proyectobac-d714e.web.app'],
         methods: ['GET', 'POST', 'PUT', 'DELETE'],
         credentials: true,
       },
