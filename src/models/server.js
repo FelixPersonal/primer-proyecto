@@ -40,7 +40,7 @@ class Server {
 
   middlewares() {
     const corsOptions = {
-      origin: 'http://localhost:3001',
+      origin: ['http://localhost:3001', 'https://proyectobac-d714e.web.app'],
       credentials: true,
     };
 
@@ -61,7 +61,19 @@ class Server {
         await Rol.create({
           nombre: 'SuperAdmin',
           estado: 'Activo',
-        });
+        }),
+        await Rol.create({
+          nombre: 'Cliente',
+          estado: 'Activo',
+
+        }),
+        await Rol.create({
+          nombre: 'Empleado',
+          estado: 'Activo',
+
+        })
+
+
         console.log('Se ha creado el rol por defecto.');
       }
 
@@ -92,8 +104,10 @@ class Server {
           id_rol: 1,
           nombre_usuario: 'Admin',
           contrasena: '12345678S',
-          correo: 'adminbac@gmail.com',
+          correo: 'sionbarbershop5@gmail.com',
           estado: 'Activo',
+
+          
         });
 
         console.log('Se ha creado el usuario por defecto.');
@@ -103,6 +117,8 @@ class Server {
 
         // Asignar todos los permisos al usuario creado
         await usuarioPorDefecto.setPermisos(permisos);
+
+
 
         console.log('Se han asignado todos los permisos al usuario por defecto.');
 
@@ -161,7 +177,7 @@ class Server {
   sockets() {
     this.io = socketIO(this.server, {
       cors: {
-        origin: 'http://localhost:3001',
+        origin: ['http://localhost:3001', 'https://proyectobac-d714e.web.app'],
         methods: ['GET', 'POST', 'PUT', 'DELETE'],
         credentials: true,
       },

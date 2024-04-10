@@ -99,29 +99,6 @@ if (nombre && nombre !== rol.nombre) {
 
 
 
-
-/*
-
-const postRol = async (req, res = response) => {
-    const { nombre, estado, permisos } = req.body;
-  
-    try {
-      // Crea el rol
-      const nuevoRol = await Rol.create({ nombre, estado });
-  
-      // Asigna permisos al rol
-      if (permisos && permisos.length > 0) {
-        await nuevoRol.setPermisos(permisos);
-      }
-  
-      res.json(nuevoRol);
-    } catch (error) {
-      console.error("Error al crear el rol:", error);
-      res.status(500).json({ error: "Error interno del servidor" });
-    }
-  };
-*/
-
 const postRol = async (req, res = response) => {
   const { nombre, estado, permisos } = req.body;
 
@@ -157,15 +134,6 @@ const postRol = async (req, res = response) => {
 
 const deleteRol = async (req, res = response) => {
   const { id } = req.params;
-  const rolesEspeciales = {
-      11: 'Cliente',
-      14: 'Administrador',
-      15: 'Empleado'
-  };
-
-  if (id in rolesEspeciales) {
-      return res.status(400).json({ error: `No se puede eliminar el rol de ${rolesEspeciales[id]}.` });
-  }
 
   try {
       const rol = await Rol.findByPk(id);
