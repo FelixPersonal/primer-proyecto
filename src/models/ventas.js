@@ -90,6 +90,7 @@ const Venta = sequelize.define('ventas', {
       is: /^[A-Za-z\s]+$/,
     },
   },
+  
 },{
   timestamps: true
 },);

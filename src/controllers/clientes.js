@@ -78,6 +78,7 @@ const postCliente = async (req, res = response) => {
         console.error(err.message);
         res.status(500).json({
             msg: 'Error al crear un nuevo cliente.',
+            error: err
         });
     }
 };

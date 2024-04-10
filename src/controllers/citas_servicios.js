@@ -14,7 +14,7 @@ const getCitasServicios = async (req, res = response) => {
 const getCitaServicio = async (req, res = response) => {
   const { id } = req.params;
   try {
-    const citaServicio = await CitasServicios.findOne({
+    const citaServicio = await CitasServicios.findAll({
       where: { id_cita: id }
     });
     if (citaServicio) {
