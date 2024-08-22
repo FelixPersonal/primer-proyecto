@@ -46,7 +46,6 @@ const getUsuario = async (req, res = response) => {
 const postUsuario = async (req, res = response) => {
   const newEntryData = req.body;
 
-<<<<<<< HEAD
     console.log('Datos de la nueva entrada:', newEntryData);
 
     if (!newEntryData.contrasena) {
@@ -96,42 +95,6 @@ const postUsuario = async (req, res = response) => {
 
 
 
-=======
-  if (!newEntryData.contrasena) {
-    return res
-      .status(400)
-      .json({ error: "La contraseña no se ha proporcionado correctamente" });
-  }
-
-  try {
-    const createdUsuarioItem = await Usuario.create(newEntryData);
-    res
-      .status(201)
-      .json({
-        message: "Usuario guardado exitosamente",
-        usuario: createdUsuarioItem,
-      });
-  } catch (error) {
-    console.error(error);
-
-    // Verificar si el error es debido a un nombre de usuario o correo electrónico duplicado
-    if (error.name === "SequelizeUniqueConstraintError") {
-      let errorMessage = "";
-      if (error.errors[0].path === "nombre_usuario") {
-        errorMessage =
-          "El nombre de usuario ya está en uso. Por favor, elige otro nombre.";
-      } else if (error.errors[0].path === "correo") {
-        errorMessage =
-          "El correo electrónico ya está en uso. Por favor, ingresa otro correo.";
-      }
-      return res.status(400).json({ error: errorMessage });
-    }
-
-    res.status(400).json({ error: "Error al crear un elemento de Usuario" });
-  }
-};
-
->>>>>>> 8223d05cd860b7950dc0777bcbb9150ae84770c1
 const putUsuario = async (req, res = response) => {
   const { id } = req.params;
   const updatedData = req.body;
