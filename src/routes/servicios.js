@@ -11,4 +11,4 @@ route.post('/servicio',verificarToken, postServicio);
 route.put('/servicio/:id',verificarToken, putServicio);
 route.delete('/servicio/:id',verificarToken, deleteServicio);
 
-module.exports = route; 
+module.exports = route;  
