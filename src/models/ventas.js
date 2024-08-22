@@ -39,7 +39,7 @@ const Venta = sequelize.define('ventas', {
   },
 
   id_usuario: {
-    type: DataTypes.BIGINT,
+    type: DataTypes.INTEGER,
     allowNull: true,
     references: {
       model: 'usuarios',

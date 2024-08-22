@@ -1,6 +1,13 @@
 const Empleado = require('../models/empleados');
 const Agenda = require('../models/agenda');
+const Citas = require('../models/citas');
+const Usuario = require('../models/usuarios'); // Importa el modelo de usuarios
+const sharp = require('sharp');
+const path = require('path');
 const { response } = require('express');
+
+
+
 
 const getEmpleados = async (req, res = response) => {
     try {
@@ -21,6 +28,13 @@ const getEmpleadosActivos = async (req, res = response) => {
         res.status(500).json({ error: 'Error al obtener los empleados' });
     }
 }
+
+
+
+
+
+
+
 
 const getEmpleado = async (req, res = response) => {
     const id_empleado = req.params.id;
@@ -72,22 +86,49 @@ const getEmpleadoAgendas = async (req, res = response) => {
 
 const postEmpleado = async (req, res = response) => {
     const { nombre, apellido, correo, documento, telefono } = req.body;
-    console.log(nombre, apellido, correo, documento, telefono)
 
     try {
-        const crearempleado = await Empleado.create({
+        // Subir la foto si existe
+        let fotoPath = null;
+        if (req.file) {
+            const foto = req.file;
+            fotoPath = `uploads/${Date.now()}-processed${path.extname(foto.originalname)}`;
+            await sharp(foto.path)
+                .resize(300, 300)
+                .toFile(fotoPath);
+        }
+
+        // Crear el empleado
+        const empleado = await Empleado.create({
             nombre: nombre,
             apellido: apellido,
             correo: correo,
             documento: documento,
-            telefono: telefono
+            telefono: telefono,
+            foto: fotoPath
         });
-        res.status(201).json({ message: 'Empleado agregado exitosamente', empleado: crearempleado });
+
+        // Crear el usuario asociado al empleado con id_usuario 2
+        const usuario = await Usuario.create({
+            
+            id_rol: 2, 
+            nombre_usuario: nombre,
+            apellido: apellido,
+            contrasena: '123456AA', // Puedes establecer una contraseña por defecto
+            correo: correo,
+            telefono: telefono,
+            estado: 'Activo',
+            id_empleado: empleado.id_empleado,
+        });
+
+        res.status(201).json({ message: 'Empleado agregado exitosamente', empleado, usuario });
     } catch (error) {
         console.error(error);
-        res.status(400).json({ error: 'Error al agregar el empleado' + error });
+        res.status(400).json({ error: 'Error al agregar el empleado ' + error });
     }
-}
+};
+
+
 
 const getValidarDocumento = async (req, res = response) => {
     const { documento } = req.query;
@@ -169,7 +210,6 @@ const cambiarEstadoEmpleado = async (req, res = response) => {
     }
 
 
-
 };
 
 module.exports = {
@@ -181,5 +221,7 @@ module.exports = {
     postEmpleado,
     putEmpleado,
     cambiarEstadoEmpleado,
-    getValidarDocumento
+    getValidarDocumento,
+   
+
 };

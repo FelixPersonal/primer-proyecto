@@ -1,5 +1,7 @@
 const { DataTypes } = require('sequelize');
 const { sequelize } = require('../database/config');
+const Usuario = require('./usuarios'); 
+
 
 const Empleado = sequelize.define('empleados', {
   id_empleado: {
@@ -26,7 +28,7 @@ const Empleado = sequelize.define('empleados', {
     allowNull: false,
     unique: true,
     validate: {
-      is: /^[a-zA-Z0-9._%+-]+@(?:[a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}$/,
+      isEmail: true,
     },
   },
   documento: {
@@ -43,20 +45,26 @@ const Empleado = sequelize.define('empleados', {
   telefono: {
     type: DataTypes.STRING,
     allowNull: false,
-    required: true,
     validate: {
       is: /^\d{10}$/,
     },
   },
+  
+ 
+  foto: {
+    type: DataTypes.STRING, 
+    allowNull: true, 
+  },
+  
+  
   estado: {
-    type: DataTypes.STRING,
-    enum: ['Activo', 'Inactivo'],
+    type: DataTypes.ENUM('Activo', 'Inactivo'),
     defaultValue: 'Activo',
-    validate: {
-      is: /^[A-Za-z\s]+$/,
-    },
   },
 });
+
+Empleado.hasOne(Usuario, { foreignKey: 'id_empleado' }); 
+
 
 Empleado.prototype.toggleEstado = async function () {
   this.estado = this.estado === 'Activo' ? 'Inactivo' : 'Activo';

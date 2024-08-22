@@ -1,16 +1,39 @@
 const Agenda = require('../models/agenda');
 const { response } = require('express');
 const Empleado = require('../models/empleados');
+const moment = require('moment');
 
 const getAgendas = async (req, res = response) => {
     try {
-        const agendas = await Agenda.findAll();
-        res.json({ agendas });
+        // Consulta SQL para obtener las agendas ordenadas por fecha de inicio
+        const agendas = await Agenda.findAll({
+            order: [
+                ['fechaInicio', 'ASC'] // Ordenar por fecha de inicio en orden ascendente
+            ]
+        });
+
+        // Formatear las fechas antes de enviarlas como respuesta
+        const formattedAgendas = agendas.map(agenda => ({
+            id_agenda: agenda.id_agenda,
+            id_empleado: agenda.id_empleado,
+            motivo: agenda.motivo,
+            fechaInicio: moment(agenda.fechaInicio).format('YYYY-MM-DD HH:mm:ss'),
+            fechaFin: moment(agenda.fechaFin).format('YYYY-MM-DD HH:mm:ss'),
+            horaInicio: agenda.horaInicio,
+            horaFin: agenda.horaFin,
+            estado: agenda.estado,
+            createdAt: moment(agenda.createdAt).format('YYYY-MM-DD HH:mm:ss'),
+            updatedAt: moment(agenda.updatedAt).format('YYYY-MM-DD HH:mm:ss')
+        }));
+
+        res.json({ agendas: formattedAgendas });
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Error al obtener elementos de Agenda' });
     }
 };
+
+
 
 const getAgendasActivas = async (req, res = response) => {
     try {

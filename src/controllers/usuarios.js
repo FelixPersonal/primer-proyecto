@@ -2,6 +2,8 @@ const Usuario = require('../models/usuarios');
 const { response } = require('express');
 const Rol = require('../models/roles');
 const Permiso = require('../models/permisos');
+const Cliente = require('../models/clientes'); // Importa el modelo Cliente
+
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 
@@ -40,16 +42,37 @@ const getUsuario = async (req, res = response) => {
         res.status(500).json({ error: 'Error al obtener el usuario' });
     }
 };
+
 const postUsuario = async (req, res = response) => {
     const newEntryData = req.body;
+
+    console.log('Datos de la nueva entrada:', newEntryData);
 
     if (!newEntryData.contrasena) {
         return res.status(400).json({ error: 'La contraseña no se ha proporcionado correctamente' });
     }
 
     try {
+      
+        // Crear el usuario
         const createdUsuarioItem = await Usuario.create(newEntryData);
-        res.status(201).json({ message: 'Usuario guardado exitosamente', usuario: createdUsuarioItem });
+
+        // Verificar si se proporciona el nombre del cliente, de lo contrario, usar el nombre del usuario
+        const nombreCliente = newEntryData.nombre || createdUsuarioItem.nombre_usuario;
+
+        // Crear el cliente asociado al usuario
+        const nuevoCliente = await Cliente.create({
+            id_rol: 3,
+            nombre: nombreCliente,
+            apellido: newEntryData.apellido || '',
+            documento: newEntryData.documento || '',
+            correo: newEntryData.correo || createdUsuarioItem.correo,
+            telefono: newEntryData.telefono || '',
+            estado: true,
+            id_usuario: createdUsuarioItem.id_usuario
+        });
+
+        res.status(201).json({ message: 'Usuario y cliente guardados exitosamente', usuario: createdUsuarioItem, cliente: nuevoCliente });
     } catch (error) {
         console.error(error);
 
@@ -67,6 +90,8 @@ const postUsuario = async (req, res = response) => {
         res.status(400).json({ error: 'Error al crear un elemento de Usuario' });
     }
 };
+
+
 
 
 

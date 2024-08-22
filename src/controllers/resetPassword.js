@@ -3,7 +3,48 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const moment = require('moment');
 const nodemailer = require('nodemailer');
-const {generarToken } = require ('./authController')
+const { generarToken } = require('./authController')
+
+
+
+
+//--------------------------------------------
+
+const enviarCorreo = async (destinatario, asunto, contenido, credenciales) => {
+  try {
+    // Verificar si las credenciales están definidas y contienen el nombre de usuario y la contraseña
+    if (!credenciales || !credenciales.usuario || !credenciales.contrasena) {
+      throw new Error('Credenciales de usuario no proporcionadas');
+    }
+
+    // Configurar el transportador de correo
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: credenciales.usuario,
+        pass: credenciales.contrasena,
+      },
+    });
+
+    // Definir el correo electrónico a enviar
+    const mailOptions = {
+      from: credenciales.usuario,
+      to: destinatario,
+      subject: asunto,
+      text: contenido,
+    };
+
+    // Enviar el correo electrónico
+    const info = await transporter.sendMail(mailOptions);
+    console.log('Correo electrónico enviado:', info.response);
+  } catch (error) {
+    console.error('Error al enviar el correo electrónico:', error);
+    throw error; // Lanzar el error para manejarlo en el controlador que llama a esta función
+  }
+};
+
+
+//----------------------------------------------------------------
 
 
 // Método para solicitar restablecimiento
@@ -26,8 +67,8 @@ const solicitarRestablecimiento = async (req, res) => {
 
     // Configurar credenciales para el envío del correo
     const credencialesGmail = {
-      usuario: 'kaizerzuleta@gmail.com',  // Reemplaza con tu dirección de correo Gmail
-      contrasena: 'ogrr wmso attv fldh',  // O utiliza una contraseña de aplicación
+      usuario: 'sionbarbershop5@gmail.com',  // Reemplaza con tu dirección de correo Gmail
+      contrasena: 'rhvs lodh xrbl hoon',  // O utiliza una contraseña de aplicación
     };
 
     // Enviar correo electrónico con el enlace de recuperación que contiene el token
@@ -45,7 +86,6 @@ const solicitarRestablecimiento = async (req, res) => {
 
 
 
-// Función para enviar correo de recuperación
 const enviarCorreoRecuperacion = async (correoDestino, token, credenciales) => {
   try {
     // Configuración del transporte de correo electrónico para Gmail
@@ -57,12 +97,26 @@ const enviarCorreoRecuperacion = async (correoDestino, token, credenciales) => {
       },
     });
 
+    // Buscar al usuario en la base de datos por su correo electrónico
+    const usuario = await Usuario.findOne({ where: { correo: correoDestino } });
+
+    // Verificar si se encontró al usuario
+    if (!usuario) {
+      throw new Error(`Usuario con correo ${correoDestino} no encontrado`);
+    }
+
+    // Obtener el nombre del usuario
+    const nombreUsuario = usuario.nombre_usuario;
+
+    // Construir el contenido del correo electrónico con el nombre del usuario
+    const mensajeCorreo = `¡¡Hola ${nombreUsuario}!! No te preocupes. \n\nHaz clic en el siguiente enlace para restablecer tu contraseña: http://localhost:3001/newPassword?token=${token}`;
+
     // Configuración del contenido del correo electrónico
     const mailOptions = {
       from: credenciales.usuario,
       to: correoDestino,
       subject: 'Recuperación de Contraseña',
-      text: `Haz clic en el siguiente enlace para restablecer tu contraseña: http://localhost:3001/newPassword?token=${token}`,
+      text: mensajeCorreo,
     };
 
     // Envío del correo electrónico
@@ -75,6 +129,7 @@ const enviarCorreoRecuperacion = async (correoDestino, token, credenciales) => {
     throw error;
   }
 };
+
 const cambiarContrasena = async (req, res) => {
   const { token, nuevaContrasena } = req.body;
 
@@ -108,6 +163,10 @@ const cambiarContrasena = async (req, res) => {
 
 
 
-  
 
-module.exports = {solicitarRestablecimiento,cambiarContrasena};
+
+module.exports = {
+  solicitarRestablecimiento,
+  cambiarContrasena,
+  enviarCorreo,
+};

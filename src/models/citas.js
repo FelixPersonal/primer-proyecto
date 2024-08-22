@@ -14,19 +14,37 @@ const Citas = sequelize.define('Citas', {
   id_empleado: {
     type: DataTypes.INTEGER,
     allowNull: false,
+    references: {
+      model: Empleados,
+      key: 'id_empleado'
+    },
+    onDelete: 'NO ACTION',
+    onUpdate: 'CASCADE'
   },
   id_usuario: {
-    type: DataTypes.BIGINT,
+    type: DataTypes.INTEGER,  // Asegúrate de que este tipo coincida con el tipo de la llave primaria en Usuario
     allowNull: false,
+    references: {
+      model: Usuario,
+      key: 'id_usuario'
+    },
+    onDelete: 'NO ACTION',
+    onUpdate: 'CASCADE'
   },
   Fecha_Atencion: {
     type: DataTypes.DATE,
+    allowNull: true,
   },
   Hora_Atencion: {
     type: DataTypes.TIME,
+    allowNull: true,
+  },
+  Hora_Fin: {
+    type: DataTypes.TIME,
+    allowNull: true,
   },
   estado: {
-    type: DataTypes.STRING,
+    type: DataTypes.ENUM('Agendada', 'Confirmada', 'Cancelada'),
     allowNull: false,
     defaultValue: 'Agendada'
   },
@@ -35,7 +53,5 @@ const Citas = sequelize.define('Citas', {
 // Vincular las llaves foráneas
 Citas.belongsTo(Empleados, { foreignKey: 'id_empleado', as: 'empleados' });
 Citas.belongsTo(Usuario, { foreignKey: 'id_usuario', as: 'usuario' });
-
-// Ahora las llaves foráneas están vinculadas
 
 module.exports = Citas;

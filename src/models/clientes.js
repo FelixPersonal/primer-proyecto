@@ -1,8 +1,8 @@
 const { DataTypes } = require('sequelize');
 const { sequelize } = require('../database/config');
+const Usuario = require('./usuarios'); 
 
 const Clientes = sequelize.define('clientes', {
-
   id_cliente: {
     type: DataTypes.INTEGER,
     autoIncrement: true,
@@ -26,14 +26,16 @@ const Clientes = sequelize.define('clientes', {
     allowNull: false
   },
   telefono: {
-    type: DataTypes.INTEGER,
+    type: DataTypes.STRING,
     allowNull: false 
   },
   estado: {
     type: DataTypes.BOOLEAN,
     defaultValue: true,
   },
+
 });
 
+Clientes.belongsTo(Usuario, { foreignKey: 'id_usuario' });
 
-module.exports = Clientes;
+module.exports = Clientes;
